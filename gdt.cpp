@@ -11,7 +11,7 @@ GlobalDescriptorTable::GlobalDescriptorTable()
     i[0] = (uint32_t)this;
     i[1] = sizeof(GlobalDescriptorTable) << 16;
 
-    asm volatile("lgdt (%0)" : : "p" (((uint8_t *)i) + 2));
+    asm volatile ("lgdt (%0)" : : "p"(((uint8_t *)i) + 2));
 }
 
 GlobalDescriptorTable::~GlobalDescriptorTable()
@@ -74,7 +74,7 @@ uint32_t GlobalDescriptorTable::SegmentDescriptor::limit()
     result = (result << 8) + target[1];
     result = (result << 8) + target[0];
 
-    if ((target[6] & 0xC0) == 0xc0)
+    if ((target[6] & 0xc0) == 0xc0)
         result = (result << 12) | 0xfff;
 
     return result;
