@@ -3,6 +3,7 @@ GPPPARAMS = -m32 -nostdlib -fno-use-cxa-atexit -fno-builtin -fno-rtti -fno-excep
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
+target = sos.iso
 objects = loader.o kernel.o gdt.o port.o interrupts.o interrupt_stubs.o
 
 %.o: %.cpp
@@ -11,13 +12,10 @@ objects = loader.o kernel.o gdt.o port.o interrupts.o interrupt_stubs.o
 %.o: %.s
 	as $(ASPARAMS) -o $@ $<
 
-mykernel.bin: linker.ld $(objects)
+sos.bin: linker.ld $(objects)
 	ld $(LDPARAMS) -T $< -o $@ $(objects)
 
-# install: mykernel.bin
-	# sudo cp $< /boot/mykernel.bin
-
-mykernel.iso: mykernel.bin
+$(target): sos.bin
 	rm -rf iso
 	mkdir iso
 	mkdir iso/boot
@@ -28,7 +26,7 @@ mykernel.iso: mykernel.bin
 	echo 'set default=0' >> iso/boot/grub/grub.cfg
 	echo '' >> iso/boot/grub/grub.cfg
 	echo 'menuentry "sbw OS" {' >> iso/boot/grub/grub.cfg
-	echo '  multiboot /boot/mykernel.bin' >> iso/boot/grub/grub.cfg
+	echo '  multiboot /boot/sos.bin' >> iso/boot/grub/grub.cfg
 	echo '  boot' >> iso/boot/grub/grub.cfg
 	echo '}' >> iso/boot/grub/grub.cfg
 
@@ -36,10 +34,10 @@ mykernel.iso: mykernel.bin
 
 	rm -rf iso
 
-run: mykernel.iso
-	VirtualBox --dbg --startvm "sbw OS" &
+run: $(target)
+	qemu-system-x86_64 -boot d -cdrom $< -m 512
 
 .PHONY: clean
 
 clean:
-	rm -rf $(objects) mykernel.bin mykernel.iso iso
+	rm -rf $(objects) $(target) sos.bin iso
