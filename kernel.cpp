@@ -3,6 +3,25 @@
 #include "gdt.h"
 #include "interrupts.h"
 
+extern "C" int __attribute__((cdecl)) __sos_builtin_printf(char *format);
+
+extern "C" void __attribute__((stdcall)) putc(char c)
+{
+    static uint16_t *video_memory = (uint16_t *)0xb8000;
+    static uint8_t x(0), y(0);
+
+    const int cols = 80;
+    const int rows = 25;
+
+    switch (c)
+    {
+    default:
+        video_memory[cols * y + x] = (video_memory[cols * y + x] & 0xff00) | c;
+        ++x;
+        break;
+    }
+}
+
 void printf(char *str)
 {
     static uint16_t *video_memory = (uint16_t *)0xb8000;
@@ -41,6 +60,10 @@ void printf(char *str)
             y = 0;
         }
     }
+
+    char *s = "kpwsdfasd";
+    int r = __sos_builtin_printf(s);
+    *((uint16_t *)0xb8000) = (*((uint16_t *)0xb8000) & 0xff00) | char(r + '0');
 }
 
 typedef void (*constructor)();
