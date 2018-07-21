@@ -32,6 +32,7 @@ public:
     uint16_t codeSegmentSelector();
     uint16_t dataSegmentSelector();
 
+private:
     SegmentDescriptor nullSegSelector;
     SegmentDescriptor unusedSegSelector;
     SegmentDescriptor codeSegSelector;
