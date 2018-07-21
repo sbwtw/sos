@@ -7,8 +7,6 @@ InterruptManager::GateDescriptor InterruptManager::interruptDescriptorTable[256]
 
 uint32_t InterruptManager::handleInterrupt(uint8_t interrupt_number, uint32_t esp)
 {
-    printf("INTERRUPT\n");
-
     return esp;
 }
 

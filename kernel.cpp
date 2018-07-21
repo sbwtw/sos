@@ -59,7 +59,6 @@ extern "C" void callConstructors()
 extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 {
     printf("sbw's Operating System\n");
-    printf("sbw's Operating System");
 
     GlobalDescriptorTable gdt;
     InterruptManager interrupts(&gdt);
