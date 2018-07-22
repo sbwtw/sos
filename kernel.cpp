@@ -19,10 +19,26 @@ extern "C" void __attribute__((stdcall)) putc(char c)
         ++y;
         x = 0;
         break;
+    case '\t':
+    {
+        const int loop = 4 - (x % 4);
+        for (int i(0); i != loop; ++i)
+            putc(' ');
+        break;
+    }
     default:
-        video_memory[cols * y + x] = (video_memory[cols * y + x] & 0xff00) | c;
+        video_memory[cols * y + x] = (video_memory[cols * y + x] & 0xff00) | (c & 0xff);
         ++x;
         break;
+    }
+
+    if (y == rows)
+    {
+        y = 0;
+        x = 0;
+    } else if (x == cols) {
+        ++y;
+        x = 0;
     }
 }
 
