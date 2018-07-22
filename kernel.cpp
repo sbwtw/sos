@@ -1,9 +1,9 @@
 
+#include "sos_io.h"
 #include "types.h"
 #include "gdt.h"
 #include "interrupts.h"
-
-extern "C" int __attribute__((cdecl)) printf(char *format, ...);
+#include "keyboard.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
@@ -57,6 +57,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 
     GlobalDescriptorTable gdt;
     InterruptManager interrupts(&gdt);
+
+    KeyboardDriver keyboardDriver(&interrupts);
 
     interrupts.activate();
 

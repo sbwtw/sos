@@ -11,7 +11,7 @@ It's just a exercise for learning OS technology.
 
 ## Build
 ```shell
-make sos
+make sos.iso
 ```
 
 ## Runtime dependencies

@@ -6,13 +6,34 @@
 #include "port.h"
 #include "gdt.h"
 
+class InterruptManager;
+
+class InterruptHandler
+{
+public:
+    virtual uint32_t handleInterrupt(uint32_t esp);
+
+protected:
+    InterruptHandler(uint8_t interrupt_number, InterruptManager *interrupt_manager);
+    ~InterruptHandler();
+
+protected:
+    uint8_t interruptNumber;
+    InterruptManager *interruptManager;
+};
+
 class InterruptManager
 {
+    friend class InterruptHandler;
+
 public:
     InterruptManager(GlobalDescriptorTable *gdt);
     ~InterruptManager();
 
     void activate();
+    void deactivate();
+
+    uint32_t doHandleInterrupt(uint8_t interrupt_number, uint32_t esp);
 
     static uint32_t handleInterrupt(uint8_t interrupt_number, uint32_t esp);
 
@@ -36,8 +57,6 @@ protected:
         uint32_t base;
     } __attribute__((packed));
 
-    static GateDescriptor interruptDescriptorTable[256];
-
     static void setInterruptDescriptorTableEntry(
         uint8_t interrupt_number,
         uint16_t codeSegmentSelectorOffset,
@@ -50,6 +69,11 @@ protected:
     Port8BitSlow picMasterData;
     Port8BitSlow picSlaveCommand;
     Port8BitSlow picSlaveData;
+
+    InterruptHandler *interruptHandlers[256];
+
+    static InterruptManager *ActiveInterruptManager;
+    static GateDescriptor InterruptDescriptorTable[256];
 };
 
 #endif // __INTERRUPTS_H_
