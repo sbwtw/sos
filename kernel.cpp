@@ -68,6 +68,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 {
     printf("sbw's Operating System\n");
     printf("number: %d - %d = %d\n", 6, 2, 6 - 2);
+    printf("hex: %x\n", 0x0123abc);
     printf("char: %c\n", 'a');
     printf("string: %s\n", "I'm string with zero terminated");
 

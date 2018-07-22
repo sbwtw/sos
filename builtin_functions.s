@@ -1,14 +1,19 @@
 
+.section .rodata
+    .align 8
+hexadecimal_table:
+    .string "0123456789ABCDEF"
+
 .section .text
-.extern putc
-.global printf
+    .extern putc
+    .global printf
 
 printf:
     push %ebp
     mov %esp, %ebp
 
-    sub $4, %esp
-    movl $8, -4(%ebp)
+    sub $8, %esp
+    movl $8, -4(%ebp) # used for count writed length
 
     push %esi
     push %edi
@@ -42,7 +47,7 @@ process:
     jmp process
 
 format:
-    inc %ecx
+    inc %ecx # eat '%' character
     movb (%esi, %ecx), %dl
 
     push %eax
@@ -64,9 +69,66 @@ format:
     cmpb $0x73, %dl
     je format_string
 
+    # hex, 0x78 == 'x'
+    cmpb $0x78, %dl
+    je format_hexadecimal
+
 format_end:
     pop %eax
     jmp process
+
+format_hexadecimal:
+    inc %ecx # eat 'x' character
+    push %ecx # save process offset
+    push %esi
+
+    push %eax # save data
+    push $0x78 # 'x'
+    push $0x30 # '0'
+    call putc
+    call putc # output "0x"
+
+    pop %eax # restore data
+    test %eax, %eax
+    jz format_hex_zero
+
+    movl $0, -8(%ebp) # record character length
+
+format_hex_next:
+    test %eax, %eax
+    jz format_hex_output
+
+    mov $16, %esi
+    cdq # sign-extend for division
+    div %esi
+    push %edx
+
+    add $1, -8(%ebp)
+    jmp format_hex_next
+
+format_hex_zero:
+    push $0
+    movl $1, -8(%ebp)
+
+format_hex_output:
+    mov -8(%ebp), %esi
+    test %esi, %esi
+    jz format_hex_end
+
+format_hex_output_next:
+    pop %eax
+    add $hexadecimal_table, %eax
+    mov (%eax), %eax
+    push %eax
+    call putc
+
+    dec %esi
+    jnz format_hex_output_next
+
+format_hex_end:
+    pop %esi
+    pop %ecx # restore process offset
+    jmp format_end
 
 format_digit:
     inc %ecx
