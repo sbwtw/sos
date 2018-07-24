@@ -26,7 +26,7 @@ uint32_t KeyboardDriver::handleInterrupt(uint32_t esp)
 {
     uint8_t key = dataPort.read();
 
-    printf("KEYBOARD %x\t", key);
+    printf("KEYBOARD %x %c\t", key, key & 0xff);
 
     return esp;
 }
