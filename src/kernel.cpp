@@ -4,6 +4,7 @@
 #include "gdt.h"
 #include "interrupts.h"
 #include "keyboard.h"
+#include "mouse.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
@@ -76,6 +77,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     InterruptManager interrupts(&gdt);
 
     KeyboardDriver keyboardDriver(&interrupts);
+    MouseDriver mouseDriver(&interrupts);
 
     interrupts.activate();
 

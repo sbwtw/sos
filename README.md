@@ -1,6 +1,6 @@
 
 # SOS - sbw's Operating System
-It's just a exercise for learning OS technology.
+It's just a toy for learning OS technology.
 
 # Build from source
 
