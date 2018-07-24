@@ -4,9 +4,9 @@ cmake_minimum_required(VERSION 3.7)
 project(sos CXX ASM)
 
 # Sources files
-file(GLOB ASM "*.s")
-file(GLOB HEADERS "*.h")
-file(GLOB SOURCES "*.cpp")
+file(GLOB ASM "asm/*.s")
+file(GLOB INCLUDES "include/*.h")
+file(GLOB SOURCES "src/*.cpp" "src/*.h")
 file(GLOB LINKER "linker.ld")
 
 set(BIN_NAME sos_kernel)
@@ -19,7 +19,8 @@ set(CMAKE_EXE_LINKER_FLAGS "-T ${LINKER}")
 
 set_source_files_properties(${ASM} PROPERTIES COMPILE_FLAGS "-m32")
 
-add_executable(${BIN_NAME} ${ASM} ${HEADERS} ${SOURCES})
+add_executable(${BIN_NAME} ${ASM} ${INCLUDES} ${SOURCES})
+target_include_directories(${BIN_NAME} PUBLIC include)
 add_custom_command(TARGET ${BIN_NAME} POST_BUILD
                    COMMAND mkdir -p iso/boot/grub
                    COMMAND cp ${BIN_NAME} iso/boot
