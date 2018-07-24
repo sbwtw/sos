@@ -6,12 +6,16 @@ It's just a exercise for learning OS technology.
 
 ## Build dependencies
 - g++
+- cmake
 - grub-mkrescue
 - xorriso
 
 ## Build
 ```shell
-make sos.iso
+mkdir build
+cd build
+cmake ..
+make # -jX
 ```
 
 ## Runtime dependencies
@@ -19,7 +23,7 @@ make sos.iso
 
 ## Run
 ```shell
-make run
+make launch-qemu
 ```
 
 # Screenshots
