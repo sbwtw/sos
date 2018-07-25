@@ -7,6 +7,19 @@ KeyboardDriver::KeyboardDriver(InterruptManager *interrupt_manager)
     , dataPort(0x60)
     , commandPort(0x64)
 {
+}
+
+uint32_t KeyboardDriver::handleInterrupt(uint32_t esp)
+{
+    uint8_t key = dataPort.read();
+
+    printf("KEYBOARD %x %c\t", key, key & 0xff);
+
+    return esp;
+}
+
+void KeyboardDriver::activate()
+{
     while (commandPort.read() & 0x1)
         dataPort.read();
 
@@ -20,13 +33,4 @@ KeyboardDriver::KeyboardDriver(InterruptManager *interrupt_manager)
     commandPort.write(0x60);
     dataPort.write(status);
     dataPort.write(0xf4);
-}
-
-uint32_t KeyboardDriver::handleInterrupt(uint32_t esp)
-{
-    uint8_t key = dataPort.read();
-
-    printf("KEYBOARD %x %c\t", key, key & 0xff);
-
-    return esp;
 }

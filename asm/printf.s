@@ -103,7 +103,7 @@ format_hex_next:
     div %esi
     push %edx
 
-    add $1, -8(%ebp)
+    addl $1, -8(%ebp)
     jmp format_hex_next
 
 format_hex_zero:

@@ -5,13 +5,16 @@
 #include "types.h"
 #include "interrupts.h"
 #include "port.h"
+#include "driver.h"
 
-class MouseDriver : public InterruptHandler
+class MouseDriver : public InterruptHandler, public Driver
 {
 public:
     MouseDriver(InterruptManager *interrupt_manager);
 
     uint32_t handleInterrupt(uint32_t esp) override;
+
+    void activate() override;
 
 private:
     uint8_t buffer[3];

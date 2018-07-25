@@ -7,27 +7,6 @@ MouseDriver::MouseDriver(InterruptManager *interrupt_manager)
     , dataPort(0x60)
     , commandPort(0x64)
 {
-    offset = 0;
-    buttons = 0;
-
-    static uint16_t *VideoMemory = (uint16_t *)0xb8000;
-    VideoMemory[80 * 0 + 0] = (VideoMemory[80 * 0 + 0] & 0xf000) >> 4 |
-                              (VideoMemory[80 * 0 + 0] & 0x0f00) << 4 |
-                              (VideoMemory[80 * 0 + 0] & 0x00ff);
-
-    // activate interrupts
-    commandPort.write(0xa8);
-    // get current state
-    commandPort.write(0x20);
-
-    uint8_t status = dataPort.read() | 0x2;
-    // set state
-    commandPort.write(0x60);
-    dataPort.write(status);
-
-    commandPort.write(0xd4);
-    dataPort.write(0xf4);
-    dataPort.read();
 }
 
 uint32_t MouseDriver::handleInterrupt(uint32_t esp)
@@ -67,4 +46,29 @@ uint32_t MouseDriver::handleInterrupt(uint32_t esp)
     }
 
     return esp;
+}
+
+void MouseDriver::activate()
+{
+    offset = 0;
+    buttons = 0;
+
+    static uint16_t *VideoMemory = (uint16_t *)0xb8000;
+    VideoMemory[80 * 0 + 0] = (VideoMemory[80 * 0 + 0] & 0xf000) >> 4 |
+                              (VideoMemory[80 * 0 + 0] & 0x0f00) << 4 |
+                              (VideoMemory[80 * 0 + 0] & 0x00ff);
+
+    // activate interrupts
+    commandPort.write(0xa8);
+    // get current state
+    commandPort.write(0x20);
+
+    uint8_t status = dataPort.read() | 0x2;
+    // set state
+    commandPort.write(0x60);
+    dataPort.write(status);
+
+    commandPort.write(0xd4);
+    dataPort.write(0xf4);
+    dataPort.read();
 }
