@@ -78,9 +78,10 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     InterruptManager interrupts(&gdt);
 
     KeyboardEventHandler keyboardEventHandler;
+    MouseEventHandler mouseEventHandler;
 
     KeyboardDriver keyboardDriver(&interrupts, &keyboardEventHandler);
-    MouseDriver mouseDriver(&interrupts);
+    MouseDriver mouseDriver(&interrupts, &mouseEventHandler);
 
     DriverManager drvMgr;
     drvMgr.appendDriver(&mouseDriver);
