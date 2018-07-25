@@ -2,10 +2,26 @@
 #include "sos_io.h"
 #include "keyboard.h"
 
-KeyboardDriver::KeyboardDriver(InterruptManager *interrupt_manager)
+KeyboardEventHandler::KeyboardEventHandler()
+{
+}
+
+void KeyboardEventHandler::onKeyPressed(char key)
+{
+    printf("PRESSED %x\t", key);
+}
+
+void KeyboardEventHandler::onKeyReleased(char key)
+{
+    // printf("RELEASED %x %c\t", key, key & 0xff);
+    printf("RELEASED %c\t", key);
+}
+
+KeyboardDriver::KeyboardDriver(InterruptManager *interrupt_manager, KeyboardEventHandler *key_handler)
     : InterruptHandler(0x21, interrupt_manager)
     , dataPort(0x60)
     , commandPort(0x64)
+    , keyEventHandler(key_handler)
 {
 }
 
@@ -13,7 +29,13 @@ uint32_t KeyboardDriver::handleInterrupt(uint32_t esp)
 {
     uint8_t key = dataPort.read();
 
-    printf("KEYBOARD %x %c\t", key, key & 0xff);
+    if (keyEventHandler == nullptr)
+        return esp;
+
+    if (key & 0x80)
+        keyEventHandler->onKeyReleased(key);
+    else
+        keyEventHandler->onKeyPressed(key);
 
     return esp;
 }

@@ -77,7 +77,9 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     GlobalDescriptorTable gdt;
     InterruptManager interrupts(&gdt);
 
-    KeyboardDriver keyboardDriver(&interrupts);
+    KeyboardEventHandler keyboardEventHandler;
+
+    KeyboardDriver keyboardDriver(&interrupts, &keyboardEventHandler);
     MouseDriver mouseDriver(&interrupts);
 
     DriverManager drvMgr;

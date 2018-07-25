@@ -7,10 +7,19 @@
 #include "port.h"
 #include "driver.h"
 
+class KeyboardEventHandler
+{
+public:
+    KeyboardEventHandler();
+
+    virtual void onKeyPressed(char key);
+    virtual void onKeyReleased(char key);
+};
+
 class KeyboardDriver : public InterruptHandler, public Driver
 {
 public:
-    KeyboardDriver(InterruptManager *interrupt_manager);
+    KeyboardDriver(InterruptManager *interrupt_manager, KeyboardEventHandler *handler);
 
     uint32_t handleInterrupt(uint32_t esp) override;
 
@@ -19,6 +28,8 @@ public:
 private:
     Port8Bit dataPort;
     Port8Bit commandPort;
+
+    KeyboardEventHandler *keyEventHandler;
 };
 
 #endif // __KEYBOARD_H_

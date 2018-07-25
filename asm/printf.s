@@ -15,8 +15,7 @@ printf:
     sub $8, %esp
     movl $8, -4(%ebp) # used for count writed length
 
-    push %esi
-    push %edi
+    pushal
 
     xor %eax, %eax
     xor %ecx, %ecx
@@ -175,8 +174,7 @@ format_string_end:
     jmp format_end
 
 end:
-    pop %edi
-    pop %esi
+    popal
 
     mov %ebp, %esp
     pop %ebp
