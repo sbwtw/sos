@@ -32,15 +32,6 @@ extern "C" void __attribute__((stdcall)) putc(char c)
     }
 }
 
-// void printf(char *str)
-// {
-    // __sos_builtin_printf(str);
-
-    // char *s = "test";
-    // int r = __sos_builtin_printf(s);
-    // *((uint16_t *)0xb8000) = (*((uint16_t *)0xb8000) & 0xff00) | char(r + '0');
-// }
-
 typedef void (*constructor)();
 
 extern "C" constructor start_ctors;
@@ -85,7 +76,6 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     interrupts.activate();
 
     BlinkingCursor cursorMgr;
-    cursorMgr.disableCursor();
 
     while (1);
 }

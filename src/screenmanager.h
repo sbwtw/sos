@@ -9,6 +9,9 @@ class ScreenManager
 public:
     static ScreenManager *instance();
 
+    static uint8_t maximumScreenWidth();
+    static uint8_t maximumScreenHeight();
+
     void write(char c);
     uint8_t x() const { return currentX; }
     uint8_t y() const { return currentY; }

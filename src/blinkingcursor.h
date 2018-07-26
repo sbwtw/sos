@@ -15,6 +15,7 @@ public:
 
     void enableCursor();
     void disableCursor();
+    void move(uint8_t x, uint8_t y);
 
 private:
     Port8Bit commandPort;

@@ -22,6 +22,16 @@ void ScreenManager::setInstance(ScreenManager *instance)
     ScreenManagerInstance = instance;
 }
 
+uint8_t ScreenManager::maximumScreenHeight()
+{
+    return MaxScreenHeight;
+}
+
+uint8_t ScreenManager::maximumScreenWidth()
+{
+    return MaxScreenWidth;
+}
+
 ScreenManager::ScreenManager()
     : currentX(0)
     , currentY(0)
