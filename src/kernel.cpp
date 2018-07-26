@@ -7,6 +7,7 @@
 #include "mouse.h"
 #include "driver.h"
 #include "screenmanager.h"
+#include "blinkingcursor.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
@@ -78,6 +79,9 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     drvMgr.activateAll();
 
     interrupts.activate();
+
+    BlinkingCursor cursorMgr;
+    cursorMgr.disableCursor();
 
     while (1);
 }

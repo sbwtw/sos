@@ -1,8 +1,9 @@
 
 #include "screenmanager.h"
 
-uint16_t * const VideoMemLoc = (uint16_t *)0xb8000;
 ScreenManager *ScreenManagerInstance = nullptr;
+
+uint16_t * const VideoMemLoc = (uint16_t *)0xb8000;
 const int MaxScreenWidth = 80;
 const int MaxScreenHeight = 25;
 
@@ -54,8 +55,8 @@ void ScreenManager::moveCurrentLocation(int offset_x, int offset_y)
     int new_y = currentY + offset_y;
 
     new_y += new_x / MaxScreenWidth;
-    new_y %= MaxScreenHeight;
     new_x %= MaxScreenWidth;
+    new_y %= MaxScreenHeight;
 
     currentX = new_x;
     currentY = new_y;
