@@ -11,11 +11,12 @@ It's just a toy for learning OS technology.
 - xorriso
 
 ## Build
+Must using g++ as compiler, clang++ or other else is not support yet. for using Ninja as generator, just add argument `-G "Ninja"` in cmake commandline.
 ```shell
 mkdir build
 cd build
-cmake ..
-make
+cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_ASM_COMPILER=g++ ..
+make # or ninja when using Ninja as generator
 ```
 
 ## Runtime dependencies

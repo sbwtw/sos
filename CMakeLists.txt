@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 3.7)
 
-project(sos CXX ASM)
+project(sos LANGUAGES ASM CXX)
 
 # Sources files
 file(GLOB ASM "asm/*.s")
@@ -14,7 +14,7 @@ set(ISO_NAME sos.iso)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_CXX_FLAGS "-Wall -m32 -nostdlib -fno-use-cxa-atexit -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fno-stack-protector")
+set(CMAKE_CXX_FLAGS "-Wall -m32 -nostdlib -fno-use-cxa-atexit -fno-builtin -fno-leading-underscore -fno-rtti -fno-exceptions -fno-stack-protector")
 set(CMAKE_EXE_LINKER_FLAGS "-T ${LINKER}")
 
 set_source_files_properties(${ASM} PROPERTIES COMPILE_FLAGS "-m32")

@@ -8,6 +8,7 @@
 #include "driver.h"
 #include "screenmanager.h"
 #include "blinkingcursor.h"
+#include "pci.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
@@ -77,6 +78,9 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     drvMgr.appendDriver(&mouseDriver);
     drvMgr.appendDriver(&keyboardDriver);
     drvMgr.activateAll();
+
+    PeripheralComponentInterconnectController pciController;
+    pciController.selectDrivers(&drvMgr);
 
     interrupts.activate();
 
