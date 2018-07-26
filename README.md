@@ -15,7 +15,7 @@ It's just a toy for learning OS technology.
 mkdir build
 cd build
 cmake ..
-cmake --build .
+make
 ```
 
 ## Runtime dependencies
@@ -23,7 +23,7 @@ cmake --build .
 
 ## Run
 ```shell
-cmake --build . --target launch-qemu
+make launch-qemu
 ```
 
 # Screenshots

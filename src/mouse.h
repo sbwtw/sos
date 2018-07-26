@@ -14,7 +14,11 @@ public:
 
     virtual void onMousePressed(uint8_t button);
     virtual void onMouseReleased(uint8_t button);
-    virtual void onMouseMove(int x, int y);
+    virtual void onMouseMove(int offset_x, int offset_y);
+
+private:
+    int mouseX;
+    int mouseY;
 };
 
 class MouseDriver : public InterruptHandler, public Driver

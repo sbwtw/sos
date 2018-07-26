@@ -6,41 +6,27 @@
 #include "keyboard.h"
 #include "mouse.h"
 #include "driver.h"
+#include "screenmanager.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
-    static uint16_t *video_memory = (uint16_t *)0xb8000;
-    static uint8_t x(0), y(0);
-
-    const int cols = 80;
-    const int rows = 25;
+    ScreenManager *sm = ScreenManager::instance();
 
     switch (c)
     {
     case '\n':
-        ++y;
-        x = 0;
+        sm->moveBreakLine();
         break;
     case '\t':
     {
-        const int loop = 4 - (x % 4);
-        for (int i(0); i != loop; ++i)
-            putc(' ');
+        const int space_count = 4 - (sm->x() % 4);
+        for (int i(0); i != space_count; ++i)
+            sm->write(' ');
         break;
     }
     default:
-        video_memory[cols * y + x] = (video_memory[cols * y + x] & 0xff00) | (c & 0xff);
-        ++x;
+        sm->write(c);
         break;
-    }
-
-    if (y == rows)
-    {
-        y = 0;
-        x = 0;
-    } else if (x == cols) {
-        ++y;
-        x = 0;
     }
 }
 
@@ -68,6 +54,9 @@ extern "C" void callConstructors()
 
 extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 {
+    ScreenManager screenManager;
+    ScreenManager::setInstance(&screenManager);
+
     printf("sbw's Operating System\n");
     printf("number: %d - %d = %d\n", 6, 2, 6 - 2);
     printf("hex: %x\n", 0x0123abc);

@@ -16,7 +16,7 @@ void MouseEventHandler::onMouseReleased(uint8_t button)
 
 }
 
-void MouseEventHandler::onMouseMove(int x, int y)
+void MouseEventHandler::onMouseMove(int offset_x, int offset_y)
 {
 
 }
