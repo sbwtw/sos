@@ -9,17 +9,12 @@ const int MaxScreenHeight = 25;
 
 ScreenManager *ScreenManager::instance()
 {
-    // static ScreenManager *instance = nullptr;
+    static ScreenManager *instance = nullptr;
 
-    // if (!instance)
-        // instance = new ScreenManager;
+    if (!instance)
+        instance = new ScreenManager;
 
     return ScreenManagerInstance;
-}
-
-void ScreenManager::setInstance(ScreenManager *instance)
-{
-    ScreenManagerInstance = instance;
 }
 
 uint8_t ScreenManager::maximumScreenHeight()

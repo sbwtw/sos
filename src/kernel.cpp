@@ -47,8 +47,13 @@ extern "C" void callConstructors()
 
 extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 {
-    ScreenManager screenManager;
-    ScreenManager::setInstance(&screenManager);
+    uint32_t *mem_upper = (uint32_t *)((size_t)multiboot_structure + 8);
+    size_t heap = 20 * 1024 * 1024;
+    MemoryManager memMgr(heap, (*mem_upper) * 1024 - heap - 10 * 1024);
+
+    ScreenManager *sm = ScreenManager::instance();
+    sm->setCurrentX(0);
+    sm->setCurrentY(0);
 
     printf("sbw's Operating System\n");
     printf("number: %d - %d = %d\n", 6, 2, 6 - 2);
@@ -56,11 +61,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     printf("char: %c\n", 'a');
     printf("string: %s\n", "I'm string with zero terminated");
 
-    uint32_t *mem_upper = (uint32_t *)((size_t)multiboot_structure + 8);
-    size_t heap = 10 * 1024 * 1024;
-    MemoryManager memMgr(heap, (*mem_upper) * 1024 - heap - 10 * 1024);
-
-    printf("MEM: %x\n", *mem_upper * 1024);
+    printf("AVAILABLE MEMORY RANGE: %x\n", *mem_upper * 1024);
+    printf("AVAILABLE MEMORY START: %x\n", heap);
     printf("HEAP: %x - %x\n", heap, (*mem_upper) * 1024 - heap - 10 * 1024);
 
     memMgr.dumpAllocatorInfo();

@@ -25,9 +25,10 @@ public:
     void free(void *ptr);
 
 private:
-    static MemoryManager *activeMemoryManager;
-
     MemoryChunk *firstThunk;
 };
+
+void *operator new(size_t size);
+void operator delete(void *ptr);
 
 #endif // __MEMORY_MANAGEMENT_H_

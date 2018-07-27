@@ -2,7 +2,7 @@
 #include "memorymanagement.h"
 #include "sos_io.h"
 
-MemoryManager *MemoryManager::activeMemoryManager = nullptr;
+MemoryManager *activeMemoryManager = nullptr;
 
 MemoryManager::MemoryManager(size_t start, size_t size)
 {
@@ -93,5 +93,15 @@ void MemoryManager::dumpAllocatorInfo()
     }
 
     printf("\n");
+}
+
+void *operator new(size_t size)
+{
+    return activeMemoryManager->malloc(size);
+}
+
+void operator delete(void *ptr)
+{
+    return activeMemoryManager->free(ptr);
 }
 

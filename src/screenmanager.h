@@ -21,9 +21,7 @@ public:
     void moveBreakLine() { currentX = 0; moveCurrentLocation(0, 1); }
     void moveCurrentLocation(int offset_x, int offset_y);
 
-// protected:
-    // FIXME: we don't have memory management yet.
-    static void setInstance(ScreenManager *instance);
+protected:
     ScreenManager();
 
 private:
