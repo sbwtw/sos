@@ -30,7 +30,7 @@ When build done, you can found `sos.iso` and `sos_kernel` in your build dir.
 
 ## Run
 ```shell
-make launch-qemu
+qemu-system-x86_64 -boot d -cdrom sos.iso -m 512
 ```
 
 # Screenshots

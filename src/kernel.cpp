@@ -51,10 +51,6 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     size_t heap = 20 * 1024 * 1024;
     MemoryManager memMgr(heap, (*mem_upper) * 1024 - heap - 10 * 1024);
 
-    ScreenManager *sm = ScreenManager::instance();
-    sm->setCurrentX(0);
-    sm->setCurrentY(0);
-
     printf("sbw's Operating System\n");
     printf("number: %d - %d = %d\n", 6, 2, 6 - 2);
     printf("hex: %x\n", 0x0123abc);
@@ -83,8 +79,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     drvMgr.appendDriver(&keyboardDriver);
     drvMgr.activateAll();
 
-    PeripheralComponentInterconnectController pciController;
-    pciController.selectDrivers(&drvMgr);
+    // PeripheralComponentInterconnectController pciController;
+    // pciController.selectDrivers(&drvMgr);
 
     interrupts.activate();
 

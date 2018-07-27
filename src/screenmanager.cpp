@@ -1,8 +1,6 @@
 
 #include "screenmanager.h"
 
-ScreenManager *ScreenManagerInstance = nullptr;
-
 uint16_t * const VideoMemLoc = (uint16_t *)0xb8000;
 const int MaxScreenWidth = 80;
 const int MaxScreenHeight = 25;
@@ -11,10 +9,10 @@ ScreenManager *ScreenManager::instance()
 {
     static ScreenManager *instance = nullptr;
 
-    if (!instance)
+    if (instance == nullptr)
         instance = new ScreenManager;
 
-    return ScreenManagerInstance;
+    return instance;
 }
 
 uint8_t ScreenManager::maximumScreenHeight()
