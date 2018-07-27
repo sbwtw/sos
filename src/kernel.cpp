@@ -8,6 +8,7 @@
 #include "driver.h"
 #include "screenmanager.h"
 #include "pci.h"
+#include "memorymanagement.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
@@ -54,6 +55,17 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     printf("hex: %x\n", 0x0123abc);
     printf("char: %c\n", 'a');
     printf("string: %s\n", "I'm string with zero terminated");
+
+    uint32_t *mem_upper = (uint32_t *)((size_t)multiboot_structure + 8);
+    size_t heap = 10 * 1024 * 1024;
+    MemoryManager memMgr(heap, (*mem_upper) * 1024 - heap - 10 * 1024);
+
+    printf("MEM: %x\n", *mem_upper * 1024);
+    printf("HEAP: %x - %x\n", heap, (*mem_upper) * 1024 - heap - 10 * 1024);
+
+    memMgr.dumpAllocatorInfo();
+    memMgr.malloc(512);
+    memMgr.dumpAllocatorInfo();
 
     GlobalDescriptorTable gdt;
     InterruptManager interrupts(&gdt);
