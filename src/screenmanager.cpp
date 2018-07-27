@@ -36,7 +36,7 @@ ScreenManager::ScreenManager()
     : currentX(0)
     , currentY(0)
 {
-
+    blinkingCursor.enableCursor();
 }
 
 void ScreenManager::write(char c)
@@ -45,18 +45,8 @@ void ScreenManager::write(char c)
 
     VideoMemLoc[loc] = (VideoMemLoc[loc] & 0xff00) | (c & 0xff);
 
-    // move current location
-    if (currentX != MaxScreenWidth)
-    {
-        ++currentX;
-    } else {
-        currentX = 0;
-
-        if (currentY != MaxScreenHeight)
-            ++currentY;
-        else
-            currentY = 0;
-    }
+    // move cursor to next
+    moveCurrentLocation(1, 0);
 }
 
 void ScreenManager::moveCurrentLocation(int offset_x, int offset_y)
@@ -70,4 +60,11 @@ void ScreenManager::moveCurrentLocation(int offset_x, int offset_y)
 
     currentX = new_x;
     currentY = new_y;
+
+    updateBlinkingCursor();
+}
+
+void ScreenManager::updateBlinkingCursor()
+{
+    blinkingCursor.move(currentX, currentY);
 }
