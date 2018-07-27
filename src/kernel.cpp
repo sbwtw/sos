@@ -9,6 +9,7 @@
 #include "screenmanager.h"
 #include "pci.h"
 #include "memorymanagement.h"
+#include "cmos.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
@@ -83,6 +84,10 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     // pciController.selectDrivers(&drvMgr);
 
     interrupts.activate();
+
+    CMOSManager cmosMgr;
+    Time tm = cmosMgr.time();
+    printf("Time: %x %x %x %x %x %x\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
 
     while (1);
 }
