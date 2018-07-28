@@ -1,30 +1,14 @@
 
 #include "port.h"
 
-Port::Port(uint16_t port_number)
-{
-    portNumber = port_number;
-}
-
-Port::~Port()
-{
-}
-
-Port8Bit::Port8Bit(uint16_t port_number)
-    : Port(port_number)
-{
-}
-
-Port8Bit::~Port8Bit()
-{
-}
-
-void Port8Bit::write(uint8_t data)
+template <>
+void Port<uint8_t>::write(uint8_t data)
 {
     asm volatile("outb %0, %1" : : "a"(data), "Nd"(portNumber));
 }
 
-uint8_t Port8Bit::read()
+template <>
+uint8_t Port<uint8_t>::read()
 {
     uint8_t result;
 
@@ -33,30 +17,8 @@ uint8_t Port8Bit::read()
     return result;
 }
 
-Port8BitSlow::Port8BitSlow(uint16_t port_number)
-    : Port8Bit(port_number)
-{
-}
-
-Port8BitSlow::~Port8BitSlow()
-{
-}
-
-void Port8BitSlow::write(uint8_t data)
-{
-    asm volatile("outb %0, %1" : : "a"(data), "Nd"(portNumber));
-}
-
-Port16Bit::Port16Bit(uint32_t port_number)
-    : Port(port_number)
-{
-}
-
-Port16Bit::~Port16Bit()
-{
-}
-
-void Port16Bit::write(uint16_t data)
+template <>
+void Port<uint16_t>::write(uint16_t data)
 {
     asm volatile("outw %0, %1\n"
                  "jmp 1f\n"
@@ -65,7 +27,8 @@ void Port16Bit::write(uint16_t data)
                  "1:" : : "a"(data), "Nd"(portNumber));
 }
 
-uint16_t Port16Bit::read()
+template <>
+uint16_t Port<uint16_t>::read()
 {
     uint16_t result;
 
@@ -74,21 +37,14 @@ uint16_t Port16Bit::read()
     return result;
 }
 
-Port32Bit::Port32Bit(uint64_t port_number)
-    : Port(port_number)
-{
-}
-
-Port32Bit::~Port32Bit()
-{
-}
-
-void Port32Bit::write(uint32_t data)
+template <>
+void Port<uint32_t>::write(uint32_t data)
 {
     asm volatile("outl %0, %1" : : "a"(data), "Nd"(portNumber));
 }
 
-uint32_t Port32Bit::read()
+template <>
+uint32_t Port<uint32_t>::read()
 {
     uint32_t result;
 

@@ -4,53 +4,35 @@
 
 #include "types.h"
 
+template <typename Type>
 class Port
 {
-protected:
+public:
     Port(uint16_t port_number);
-    ~Port();
+    virtual ~Port();
+
+    void write(Type data);
+    Type read();
 
 protected:
     uint16_t portNumber;
 };
 
-class Port8Bit : public Port
+template<typename Type>
+Port<Type>::Port(uint16_t port_number)
+    : portNumber(port_number)
 {
-public:
-    Port8Bit(uint16_t port_number);
-    ~Port8Bit();
+}
 
-    virtual void write(uint8_t data);
-    virtual uint8_t read();
-};
-
-class Port8BitSlow : public Port8Bit
+template<typename Type>
+Port<Type>::~Port()
 {
-public:
-    Port8BitSlow(uint16_t port_number);
-    ~Port8BitSlow();
+}
 
-    virtual void write(uint8_t data);
-};
+typedef Port<uint8_t> Port8Bit;
+typedef Port<uint16_t> Port16Bit;
+typedef Port<uint32_t> Port32Bit;
 
-class Port16Bit : public Port
-{
-public:
-    Port16Bit(uint32_t port_number);
-    ~Port16Bit();
-
-    virtual void write(uint16_t data);
-    virtual uint16_t read();
-};
-
-class Port32Bit : public Port
-{
-public:
-    Port32Bit(uint64_t port_number);
-    ~Port32Bit();
-
-    virtual void write(uint32_t data);
-    virtual uint32_t read();
-};
+typedef Port8Bit Port8BitSlow;
 
 #endif // __PORT_H_
