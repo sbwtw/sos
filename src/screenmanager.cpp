@@ -26,11 +26,11 @@ uint8_t ScreenManager::maximumScreenWidth()
 }
 
 ScreenManager::ScreenManager()
-    : caretEnabled(true)
+    : caretEnabled(false)
     , currentX(0)
     , currentY(0)
-    , caretX(0)
-    , caretY(0)
+    , caretX(MaxScreenWidth / 2)
+    , caretY(MaxScreenHeight / 2)
 {
     blinkingCursor.enableCursor();
 }

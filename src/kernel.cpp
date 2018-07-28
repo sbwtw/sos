@@ -105,8 +105,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     interrupts.activate();
 
     ScreenManager *sm = ScreenManager::instance();
-    sm->setCaretLocation(2, 2);
-    // sm->disableCaret();
+    sm->enableCaret();
 
     CMOSManager cmosMgr;
     Time tm = cmosMgr.time();
