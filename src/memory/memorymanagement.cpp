@@ -2,11 +2,11 @@
 #include "memorymanagement.h"
 #include "sos_io.h"
 
-MemoryManager *activeMemoryManager = nullptr;
+MemoryAllocator *activeMemoryAllocator = nullptr;
 
-MemoryManager::MemoryManager(size_t start, size_t size)
+MemoryAllocator::MemoryAllocator(size_t start, size_t size)
 {
-    activeMemoryManager = this;
+    activeMemoryAllocator = this;
     firstThunk = (MemoryChunk *)start;
 
     firstThunk->prev = nullptr;
@@ -15,71 +15,7 @@ MemoryManager::MemoryManager(size_t start, size_t size)
     firstThunk->allocated = false;
 }
 
-void *MemoryManager::malloc(size_t size)
-{
-    MemoryChunk *r = nullptr;
-
-    for (MemoryChunk *mc = firstThunk; mc; mc = mc->next)
-    {
-        if (!mc->allocated && mc->size > size)
-        {
-            r = mc;
-            break;
-        }
-    }
-
-    if (!r)
-        return nullptr;
-
-    if (r->size >= size + sizeof(MemoryChunk) + 1)
-    {
-        MemoryChunk *newChunk = (MemoryChunk *)((size_t)r + sizeof(MemoryChunk) + size);
-
-        newChunk->allocated = false;
-        newChunk->size = r->size - size - sizeof(MemoryChunk);
-        newChunk->prev = r;
-        newChunk->next = r->next;
-
-        if (newChunk->next)
-            newChunk->next->prev = newChunk;
-
-        r->size = size;
-        r->next = newChunk;
-    }
-
-    r->allocated = true;
-
-    return (void *)((size_t)r + sizeof(MemoryChunk));
-}
-
-void MemoryManager::free(void *ptr)
-{
-    MemoryChunk *chunk = (MemoryChunk *)((size_t)ptr - sizeof(MemoryChunk));
-
-    chunk->allocated = false;
-
-    // merge prev
-    if (chunk->prev && !chunk->prev->allocated)
-    {
-        chunk->prev->next = chunk->next;
-        chunk->prev->size += chunk->size + sizeof(MemoryChunk);
-        if (chunk->next)
-            chunk->next->prev = chunk->prev;
-
-        chunk = chunk->prev;
-    }
-
-    // merge next
-    if (chunk->next && !chunk->next->allocated)
-    {
-        chunk->size += chunk->next->size + sizeof(MemoryChunk);
-        chunk->next = chunk->next->next;
-        if (chunk->next)
-            chunk->next->prev = chunk;
-    }
-}
-
-void MemoryManager::dumpAllocatorInfo()
+void MemoryAllocator::dumpAllocatorInfo()
 {
     MemoryChunk *c = firstThunk;
 
@@ -97,11 +33,11 @@ void MemoryManager::dumpAllocatorInfo()
 
 void *operator new(size_t size)
 {
-    return activeMemoryManager->malloc(size);
+    return activeMemoryAllocator->malloc(size);
 }
 
 void operator delete(void *ptr)
 {
-    return activeMemoryManager->free(ptr);
+    return activeMemoryAllocator->free(ptr);
 }
 

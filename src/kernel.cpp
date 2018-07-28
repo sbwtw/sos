@@ -8,7 +8,7 @@
 #include "hw-abstract/driver.h"
 #include "utils/screenmanager.h"
 #include "hard-ware/pci.h"
-#include "memory/memorymanagement.h"
+#include "memory/firstfitallocator.h"
 #include "hard-ware/cmos.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
@@ -33,6 +33,16 @@ extern "C" void __attribute__((stdcall)) putc(char c)
     }
 }
 
+void put_simple_digit(int num)
+{
+    const int d = num / 10;
+    const int r = num % 10;
+
+    if (d)
+        put_simple_digit(d);
+    putc(r + '0');
+}
+
 extern "C" void __attribute__((stdcall)) putd(int num)
 {
     if (!num)
@@ -44,12 +54,7 @@ extern "C" void __attribute__((stdcall)) putd(int num)
         num = -num;
     }
 
-    const int d = num / 10;
-    const int r = num % 10;
-
-    if (d)
-        putd(d);
-    putc(r + '0');
+    put_simple_digit(num);
 }
 
 typedef void (*constructor)();
@@ -69,7 +74,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 {
     uint32_t *mem_upper = (uint32_t *)((size_t)multiboot_structure + 8);
     size_t heap = 20 * 1024 * 1024;
-    MemoryManager memMgr(heap, (*mem_upper) * 1024 - heap - 10 * 1024);
+    FirstFitAllocator memMgr(heap, (*mem_upper) * 1024 - heap - 10 * 1024);
 
     printf("sbw's Operating System\n");
     printf("number: %d - %d = %d\n", 16, 2, 16 - 2);
