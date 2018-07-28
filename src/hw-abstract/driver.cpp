@@ -6,6 +6,11 @@ Driver::Driver()
 
 }
 
+Driver::~Driver()
+{
+
+}
+
 void Driver::activate()
 {
 

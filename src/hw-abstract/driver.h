@@ -6,6 +6,7 @@ class Driver
 {
 public:
     Driver();
+    virtual ~Driver();
 
     virtual void activate();
     virtual void deactivate();

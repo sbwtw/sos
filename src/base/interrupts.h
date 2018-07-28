@@ -15,7 +15,7 @@ public:
 
 protected:
     InterruptHandler(uint8_t interrupt_number, InterruptManager *interrupt_manager);
-    ~InterruptHandler();
+    virtual ~InterruptHandler();
 
 protected:
     uint8_t interruptNumber;
@@ -28,7 +28,7 @@ class InterruptManager
 
 public:
     InterruptManager(GlobalDescriptorTable *gdt);
-    ~InterruptManager();
+    virtual ~InterruptManager();
 
     void activate();
     void deactivate();

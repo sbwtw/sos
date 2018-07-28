@@ -11,8 +11,8 @@ public:
     Port(uint16_t port_number);
     virtual ~Port();
 
-    void write(Type data);
-    Type read();
+    virtual void write(Type data);
+    virtual Type read();
 
 protected:
     uint16_t portNumber;
