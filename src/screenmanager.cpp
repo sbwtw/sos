@@ -26,8 +26,11 @@ uint8_t ScreenManager::maximumScreenWidth()
 }
 
 ScreenManager::ScreenManager()
-    : currentX(0)
+    : caretEnabled(true)
+    , currentX(0)
     , currentY(0)
+    , caretX(0)
+    , caretY(0)
 {
     blinkingCursor.enableCursor();
 }
@@ -60,4 +63,63 @@ void ScreenManager::moveCurrentLocation(int offset_x, int offset_y)
 void ScreenManager::updateBlinkingCursor()
 {
     blinkingCursor.move(currentX, currentY);
+}
+
+void ScreenManager::enableCaret()
+{
+    if (caretEnabled)
+        return;
+
+    caretEnabled = true;
+    reverseColor(caretX, caretY);
+}
+
+void ScreenManager::disableCaret()
+{
+    if (!caretEnabled)
+        return;
+
+    caretEnabled = false;
+    reverseColor(caretX, caretY);
+}
+
+void ScreenManager::setCaretLocation(uint8_t x, uint8_t y)
+{
+    if (x >= MaxScreenWidth || y >= MaxScreenHeight)
+        return;
+
+    if (caretEnabled)
+    {
+        reverseColor(caretX, caretY);
+        reverseColor(x, y);
+    }
+
+    caretX = x;
+    caretY = y;
+}
+
+void ScreenManager::moveCareLocation(int offset_x, int offset_y)
+{
+    int new_x = offset_x + caretX;
+    int new_y = offset_y + caretY;
+
+    if (new_x < 0)
+        new_x = 0;
+    if (new_y < 0)
+        new_y = 0;
+    if (new_x >= MaxScreenWidth)
+        new_x = MaxScreenWidth - 1;
+    if (new_y >= MaxScreenHeight)
+        new_y = MaxScreenHeight - 1;
+
+    setCaretLocation(new_x, new_y);
+}
+
+void ScreenManager::reverseColor(uint8_t x, uint8_t y)
+{
+    const uint16_t current = VideoMemLoc[MaxScreenWidth * y + x];
+
+    VideoMemLoc[MaxScreenWidth * y + x] = (current & 0xf000) >> 4 |
+                                          (current & 0x0f00) << 4 |
+                                          (current & 0x00ff);
 }

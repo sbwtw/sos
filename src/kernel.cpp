@@ -38,6 +38,12 @@ extern "C" void __attribute__((stdcall)) putd(int num)
     if (!num)
         return putc('0');
 
+    if (num < 0)
+    {
+        putc('-');
+        num = -num;
+    }
+
     const int d = num / 10;
     const int r = num % 10;
 
@@ -97,6 +103,10 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     // pciController.selectDrivers(&drvMgr);
 
     interrupts.activate();
+
+    ScreenManager *sm = ScreenManager::instance();
+    sm->setCaretLocation(2, 2);
+    // sm->disableCaret();
 
     CMOSManager cmosMgr;
     Time tm = cmosMgr.time();

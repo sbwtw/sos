@@ -31,7 +31,7 @@ public:
     void activate() override;
 
 private:
-    uint8_t buffer[3];
+    int8_t buffer[3];
     uint8_t offset;
     uint8_t buttons;
 

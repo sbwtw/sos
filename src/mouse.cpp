@@ -1,6 +1,7 @@
 
 #include "sos_io.h"
 #include "mouse.h"
+#include "screenmanager.h"
 
 MouseEventHandler::MouseEventHandler()
 {
@@ -35,25 +36,14 @@ uint32_t MouseDriver::handleInterrupt(uint32_t esp)
     if (!(status & 0x20) || !mouseEventHandler)
         return esp;
 
-    static int8_t x(0), y(0);
-
     buffer[offset] = dataPort.read();
     offset = (offset + 1) % 3;
 
     if (offset == 0 && (buffer[1] || buffer[2]))
     {
-        static uint16_t *VideoMemory = (uint16_t *)0xb8000;
+        ScreenManager *sm = ScreenManager::instance();
 
-        VideoMemory[80 * y + x] = (VideoMemory[80 * y + x] & 0xf000) >> 4 |
-                                  (VideoMemory[80 * y + x] & 0x0f00) << 4 |
-                                  (VideoMemory[80 * y + x] & 0x00ff);
-
-        x += buffer[1];
-        y -= buffer[2];
-
-        VideoMemory[80 * y + x] = (VideoMemory[80 * y + x] & 0xf000) >> 4 |
-                                  (VideoMemory[80 * y + x] & 0x0f00) << 4 |
-                                  (VideoMemory[80 * y + x] & 0x00ff);
+        sm->moveCareLocation(buffer[1], -buffer[2]);
 
         // for (uint8_t i(0); i != 3; ++i)
         // {
