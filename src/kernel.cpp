@@ -1,15 +1,15 @@
 
 #include "sos_io.h"
 #include "types.h"
-#include "gdt.h"
-#include "interrupts.h"
-#include "keyboard.h"
-#include "mouse.h"
-#include "driver.h"
-#include "screenmanager.h"
-#include "pci.h"
-#include "memorymanagement.h"
-#include "cmos.h"
+#include "base/gdt.h"
+#include "base/interrupts.h"
+#include "hard-ware/keyboard.h"
+#include "hard-ware/mouse.h"
+#include "hw-abstract/driver.h"
+#include "utils/screenmanager.h"
+#include "hard-ware/pci.h"
+#include "memory/memorymanagement.h"
+#include "hard-ware/cmos.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {

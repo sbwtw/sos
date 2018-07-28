@@ -1,7 +1,7 @@
 
 #include "sos_io.h"
 #include "mouse.h"
-#include "screenmanager.h"
+#include "utils/screenmanager.h"
 
 MouseEventHandler::MouseEventHandler()
 {

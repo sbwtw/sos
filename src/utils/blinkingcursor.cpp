@@ -1,6 +1,6 @@
 
-#include "blinkingcursor.h"
-#include "screenmanager.h"
+#include "utils/blinkingcursor.h"
+#include "utils/screenmanager.h"
 
 BlinkingCursor::BlinkingCursor()
     : commandPort(0x3d4)

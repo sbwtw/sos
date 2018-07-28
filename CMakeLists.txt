@@ -6,7 +6,12 @@ project(sos LANGUAGES ASM CXX)
 # Sources files
 file(GLOB ASM "asm/*.s")
 file(GLOB INCLUDES "include/*.h")
-file(GLOB SOURCES "src/*.cpp" "src/*.h")
+file(GLOB SOURCES "src/*.cpp" "src/*.h"
+                  "src/base/*.h" "src/base/*.cpp"
+                  "src/hard-ware/*.h" "src/hard-ware/*.cpp"
+                  "src/hw-abstract/*.h" "src/hw-abstract/*.cpp"
+                  "src/memory/*.h" "src/memory/*.cpp"
+                  "src/utils/*.h" "src/utils/*.cpp")
 file(GLOB LINKER "linker.ld")
 
 set(BIN_NAME sos_kernel)
@@ -20,7 +25,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-T ${LINKER}")
 set_source_files_properties(${ASM} PROPERTIES COMPILE_FLAGS "-m32")
 
 add_executable(${BIN_NAME} ${ASM} ${INCLUDES} ${SOURCES})
-target_include_directories(${BIN_NAME} PUBLIC include)
+target_include_directories(${BIN_NAME} PUBLIC include src)
 add_custom_command(TARGET ${BIN_NAME} POST_BUILD
                    COMMAND mkdir -p iso/boot/grub
                    COMMAND cp ${BIN_NAME} iso/boot

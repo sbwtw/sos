@@ -6,7 +6,7 @@
  *  Text Mode Blinking Cursor Management
  */
 
-#include "port.h"
+#include "base/port.h"
 
 class BlinkingCursor
 {

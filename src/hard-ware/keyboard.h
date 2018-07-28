@@ -3,9 +3,9 @@
 #define __KEYBOARD_H_
 
 #include "types.h"
-#include "interrupts.h"
-#include "port.h"
-#include "driver.h"
+#include "base/interrupts.h"
+#include "base/port.h"
+#include "hw-abstract/driver.h"
 
 class KeyboardEventHandler
 {

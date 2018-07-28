@@ -1,5 +1,5 @@
 
-#include "pci.h"
+#include "hard-ware/pci.h"
 #include "sos_io.h"
 
 PeripheralComponentInterconnectDescriptor::PeripheralComponentInterconnectDescriptor()

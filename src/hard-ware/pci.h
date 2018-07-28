@@ -2,8 +2,8 @@
 #ifndef __PCI_H_
 #define __PCI_H_
 
-#include "port.h"
-#include "driver.h"
+#include "base/port.h"
+#include "hw-abstract/driver.h"
 
 class PeripheralComponentInterconnectDescriptor
 {

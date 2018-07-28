@@ -1,7 +1,7 @@
 
 #include "sos_io.h"
 #include "keyboard.h"
-#include "screenmanager.h"
+#include "utils/screenmanager.h"
 
 KeyboardEventHandler::KeyboardEventHandler()
 {

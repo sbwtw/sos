@@ -27,14 +27,12 @@ bool CMOSManager::updateInProgress()
 
 Time CMOSManager::time()
 {
-    uint8_t century;
     uint8_t last_second;
     uint8_t last_minute;
     uint8_t last_hour;
     uint8_t last_day;
     uint8_t last_month;
     uint8_t last_year;
-    uint8_t last_century;
     uint8_t register_B;
 
     // waitting for update
