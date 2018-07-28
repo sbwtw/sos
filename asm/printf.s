@@ -6,6 +6,7 @@ hexadecimal_table:
 
 .section .text
     .extern putc
+    .extern putd
     .global printf
 
 printf:
@@ -132,12 +133,11 @@ format_hex_end:
 format_digit:
     inc %ecx
 
-    # 0x30 == '0'
-    add $0x30, %eax
-
     push %ecx
+
     push %eax
-    call putc
+    call putd
+
     pop %ecx
 
     jmp format_end

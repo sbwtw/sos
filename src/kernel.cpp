@@ -33,6 +33,19 @@ extern "C" void __attribute__((stdcall)) putc(char c)
     }
 }
 
+extern "C" void __attribute__((stdcall)) putd(int num)
+{
+    if (!num)
+        return putc('0');
+
+    const int d = num / 10;
+    const int r = num % 10;
+
+    if (d)
+        putd(d);
+    putc(r + '0');
+}
+
 typedef void (*constructor)();
 
 extern "C" constructor start_ctors;
@@ -53,7 +66,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     MemoryManager memMgr(heap, (*mem_upper) * 1024 - heap - 10 * 1024);
 
     printf("sbw's Operating System\n");
-    printf("number: %d - %d = %d\n", 6, 2, 6 - 2);
+    printf("number: %d - %d = %d\n", 16, 2, 16 - 2);
     printf("hex: %x\n", 0x0123abc);
     printf("char: %c\n", 'a');
     printf("string: %s\n", "I'm string with zero terminated");
@@ -87,7 +100,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 
     CMOSManager cmosMgr;
     Time tm = cmosMgr.time();
-    printf("Time: %x %x %x %x %x %x\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
+    printf("Time: %d/%d/%d %d:%d:%d\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
 
     while (1);
 }
