@@ -16,6 +16,8 @@ struct RandResult
 
 RandResult rand_using_x86_rdrand()
 {
+    const int retry_times = 10;
+
     int32_t success = 1;
     int32_t random = 0;
 
@@ -24,7 +26,7 @@ RandResult rand_using_x86_rdrand()
                   "bt $30, %%ecx \n"
                   "jnc _fail \n"
                   ""
-                  "mov $100, %%ecx \n"
+                  "mov %2, %%ecx \n"
                   "retry: \n"
                   "rdrand %%eax \n"
                   "jc _end \n"
@@ -35,7 +37,7 @@ RandResult rand_using_x86_rdrand()
                   "_end: \n"
                   "mov %%eax, %1 \n"
                   : "=al"(success), "=al"(random)
-                  :
+                  : "m"(retry_times)
                   : "%eax", "%ecx");
 
     return { success, random };
