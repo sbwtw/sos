@@ -7,7 +7,7 @@ It's just a toy for learning OS technology.
 ## Build dependencies
 - g++
 - cmake
-- grub-mkrescue
+- grub
 - xorriso
 
 ## Build

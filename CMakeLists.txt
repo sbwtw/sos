@@ -11,6 +11,7 @@ file(GLOB SOURCES "src/*.cpp" "src/*.h"
                   "src/hard-ware/*.h" "src/hard-ware/*.cpp"
                   "src/hw-abstract/*.h" "src/hw-abstract/*.cpp"
                   "src/memory/*.h" "src/memory/*.cpp"
+                  "src/std/*.h" "src/std/*.cpp"
                   "src/utils/*.h" "src/utils/*.cpp")
 file(GLOB LINKER "linker.ld")
 

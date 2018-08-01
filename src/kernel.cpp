@@ -10,6 +10,7 @@
 #include "hard-ware/pci.h"
 #include "memory/firstfitallocator.h"
 #include "hard-ware/cmos.h"
+#include "std/stdlib.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
@@ -115,6 +116,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     CMOSManager cmosMgr;
     Time tm = cmosMgr.time();
     printf("Time: %d/%d/%d %d:%d:%d\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
+
+    printf("RANDOM: %d, %d, %d, %d\n", rand(), rand(), rand(), rand());
 
     while (1);
 }
