@@ -58,6 +58,29 @@ extern "C" void __attribute__((stdcall)) putd(int num)
     put_simple_digit(num);
 }
 
+void put_simple_hex(int num)
+{
+    const char *table = "0123456789ABCDEF";
+
+    const int d = num / 16;
+    const int r = num % 16;
+
+    if (d)
+        put_simple_hex(d);
+    putc(table[r]);
+}
+
+extern "C" void __attribute__((stdcall)) putx(int num)
+{
+    putc('0');
+    putc('x');
+
+    if (!num)
+        return putc('0');
+
+    put_simple_hex(num);
+}
+
 typedef void (*constructor)();
 
 extern "C" constructor start_ctors;

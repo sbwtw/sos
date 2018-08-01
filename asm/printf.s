@@ -7,6 +7,7 @@ hexadecimal_table:
 .section .text
     .extern putc
     .extern putd
+    .extern putx
     .global printf
 
 printf:
@@ -78,68 +79,23 @@ format_end:
     jmp process
 
 format_hexadecimal:
-    inc %ecx # eat 'x' character
-    push %ecx # save process offset
-    push %esi
+    inc %ecx
+    push %ecx
 
-    push %eax # save data
-    push $0x78 # 'x'
-    push $0x30 # '0'
-    call putc
-    call putc # output "0x"
-
-    pop %eax # restore data
-    test %eax, %eax
-    jz format_hex_zero
-
-    movl $0, -8(%ebp) # record character length
-
-format_hex_next:
-    test %eax, %eax
-    jz format_hex_output
-
-    mov $16, %esi
-    cdq # sign-extend for division
-    div %esi
-    push %edx
-
-    addl $1, -8(%ebp)
-    jmp format_hex_next
-
-format_hex_zero:
-    push $0
-    movl $1, -8(%ebp)
-
-format_hex_output:
-    mov -8(%ebp), %esi
-    test %esi, %esi
-    jz format_hex_end
-
-format_hex_output_next:
-    pop %eax
-    add $hexadecimal_table, %eax
-    mov (%eax), %eax
     push %eax
-    call putc
+    call putx
 
-    dec %esi
-    jnz format_hex_output_next
-
-format_hex_end:
-    pop %esi
-    pop %ecx # restore process offset
+    pop %ecx
     jmp format_end
 
 format_digit:
     inc %ecx
-
     push %ecx
 
     push %eax
     call putd
 
     pop %ecx
-
     jmp format_end
 
 format_char:
