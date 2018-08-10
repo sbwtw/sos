@@ -7,6 +7,7 @@
 #include "gdt.h"
 
 class InterruptManager;
+class TaskManager;
 
 class InterruptHandler
 {
@@ -27,7 +28,7 @@ class InterruptManager
     friend class InterruptHandler;
 
 public:
-    InterruptManager(GlobalDescriptorTable *gdt);
+    InterruptManager(GlobalDescriptorTable *gdt, TaskManager *task_manager);
     virtual ~InterruptManager();
 
     void activate();
@@ -72,6 +73,7 @@ protected:
     Port8BitSlow picSlaveData;
 
     InterruptHandler *interruptHandlers[256];
+    TaskManager *taskManager;
 
     static InterruptManager *ActiveInterruptManager;
     static GateDescriptor InterruptDescriptorTable[256];

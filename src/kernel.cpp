@@ -11,6 +11,7 @@
 #include "memory/firstfitallocator.h"
 #include "hard-ware/cmos.h"
 #include "std/stdlib.h"
+#include "multitasking.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
@@ -81,6 +82,18 @@ extern "C" void __attribute__((stdcall)) putx(int num)
     put_simple_hex(num);
 }
 
+void testTaskA()
+{
+    while (true)
+        printf("A");
+}
+
+void testTaskB()
+{
+    while (true)
+        printf("B");
+}
+
 typedef void (*constructor)();
 
 extern "C" constructor start_ctors;
@@ -115,7 +128,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     memMgr.dumpAllocatorInfo();
 
     GlobalDescriptorTable gdt;
-    InterruptManager interrupts(&gdt);
+    TaskManager taskMgr;
+    InterruptManager interrupts(&gdt, &taskMgr);
 
     KeyboardEventHandler keyboardEventHandler;
     MouseEventHandler mouseEventHandler;
@@ -132,6 +146,11 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     // pciController.selectDrivers(&drvMgr);
 
     interrupts.activate();
+
+    Task task_a(&gdt, testTaskA);
+    Task task_b(&gdt, testTaskB);
+    taskMgr.appendTask(&task_a);
+    taskMgr.appendTask(&task_b);
 
     ScreenManager *sm = ScreenManager::instance();
     sm->enableCaret();

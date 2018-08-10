@@ -1,6 +1,7 @@
 
 #include "interrupts.h"
 #include "sos_io.h"
+#include "multitasking.h"
 
 InterruptManager *InterruptManager::ActiveInterruptManager = nullptr;
 InterruptManager::GateDescriptor InterruptManager::InterruptDescriptorTable[256];
@@ -48,11 +49,12 @@ void InterruptManager::setInterruptDescriptorTableEntry(
     InterruptDescriptorTable[interrupt_number]._reserved = 0;
 }
 
-InterruptManager::InterruptManager(GlobalDescriptorTable *gdt)
+InterruptManager::InterruptManager(GlobalDescriptorTable *gdt, TaskManager *task_manager)
     : picMasterCommand(0x20)
     , picMasterData(0x21)
     , picSlaveCommand(0xa0)
     , picSlaveData(0xa1)
+    , taskManager(task_manager)
 {
     uint16_t code_segment = gdt->codeSegmentSelector();
     const uint8_t IDT_INTERRUPT_GATE = 0xe;
@@ -117,6 +119,11 @@ uint32_t InterruptManager::doHandleInterrupt(uint8_t interrupt_number, uint32_t 
     else if (interrupt_number != 0x20)
     {
         printf("UNHANDLED INTERRUPT: %d", interrupt_number);
+    }
+
+    if (interrupt_number == 0x20)
+    {
+        esp = (uint32_t)taskManager->schedule((CPUState *)esp);
     }
 
     if (0x20 <= interrupt_number && interrupt_number < 0x30)

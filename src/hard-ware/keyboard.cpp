@@ -9,13 +9,13 @@ KeyboardEventHandler::KeyboardEventHandler()
 
 void KeyboardEventHandler::onKeyPressed(char key)
 {
-    printf("PRESSED %x\t", key);
+    // printf("PRESSED %x\t", key);
 }
 
 void KeyboardEventHandler::onKeyReleased(char key)
 {
     // printf("RELEASED %x %c\t", key, key & 0xff);
-    printf("RELEASED %c\t", key);
+    // printf("RELEASED %c\t", key);
 }
 
 KeyboardDriver::KeyboardDriver(InterruptManager *interrupt_manager, KeyboardEventHandler *key_handler)
