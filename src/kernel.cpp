@@ -147,10 +147,10 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 
     interrupts.activate();
 
-    Task task_a(&gdt, testTaskA);
-    Task task_b(&gdt, testTaskB);
-    taskMgr.appendTask(&task_a);
-    taskMgr.appendTask(&task_b);
+    // Task task_a(&gdt, testTaskA);
+    // Task task_b(&gdt, testTaskB);
+    // taskMgr.appendTask(&task_a);
+    // taskMgr.appendTask(&task_b);
 
     ScreenManager *sm = ScreenManager::instance();
     sm->enableCaret();
