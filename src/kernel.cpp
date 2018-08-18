@@ -5,6 +5,7 @@
 #include "base/interrupts.h"
 #include "hard-ware/keyboard.h"
 #include "hard-ware/mouse.h"
+#include "hard-ware/ata.h"
 #include "hw-abstract/driver.h"
 #include "utils/screenmanager.h"
 #include "hard-ware/pci.h"
@@ -141,6 +142,18 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     drvMgr.appendDriver(&mouseDriver);
     drvMgr.appendDriver(&keyboardDriver);
     drvMgr.activateAll();
+
+    // interrupt 14
+    AdvancedTechnologyAttachment ata0m(0x1f0, true);
+    ata0m.identify();
+    AdvancedTechnologyAttachment ata0s(0x1f0, false);
+    ata0s.identify();
+
+    // interrupt 15
+    AdvancedTechnologyAttachment ata1m(0x170, true);
+    ata1m.identify();
+    AdvancedTechnologyAttachment ata1s(0x170, false);
+    ata1s.identify();
 
     // PeripheralComponentInterconnectController pciController;
     // pciController.selectDrivers(&drvMgr);
