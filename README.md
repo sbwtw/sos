@@ -29,8 +29,15 @@ When build done, you can found `sos.iso` and `sos_kernel` in your build dir.
 - QEMU
 
 ## Run
+
+### Basic
 ```shell
-qemu-system-x86_64 -boot d -cdrom sos.iso -m 512
+qemu-system-x86_64 -boot d -cdrom sos.iso -m 256
+```
+
+### Enable KVM & IOMMU (Intel VT-d/AMD-Vi) support
+```shell
+qemu-system-x86_64 -enable-kvm -machine q35,accel=kvm -device intel-iommu -cpu host -boot d -cdrom sos.iso -m 256
 ```
 
 # Screenshots
