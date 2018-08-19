@@ -10,6 +10,9 @@ It's just a toy for learning OS technology.
 - grub
 - xorriso
 
+### Extra build dependencies in Debian/Ubuntu
+- grub-pc-bin
+
 ## Build
 __Must using g++ as compiler, clang++ or other else is NOT support yet.__ for using Ninja as generator, just add argument `-G "Ninja"` in cmake commandline.
 ```shell
