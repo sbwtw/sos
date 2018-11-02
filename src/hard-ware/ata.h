@@ -8,7 +8,7 @@ class AdvancedTechnologyAttachment
 {
 
 public:
-    AdvancedTechnologyAttachment(uint16_t port_base, bool master);
+    AdvancedTechnologyAttachment(uint16_t io_base, uint16_t ctrl_base, bool master);
 
     void identify();
     void read28(uint32_t sector);
@@ -18,14 +18,16 @@ public:
 protected:
     bool master;
     Port16Bit dataPort;
-    Port8Bit errorPort;
-    Port8Bit sectorCountPort;
-    Port8Bit lbaLowPort;
-    Port8Bit lbaMidPort;
-    Port8Bit lbaHiPort;
+    Port16Bit errorPort;
+    Port16Bit sectorCountPort;
+    Port16Bit lbaLowPort;
+    Port16Bit lbaMidPort;
+    Port16Bit lbaHiPort;
     Port8Bit devicePort;
     Port8Bit commandPort;
+
     Port8Bit controlPort;
+    Port8Bit infoPort;
 };
 
 #endif // __ATA_H_

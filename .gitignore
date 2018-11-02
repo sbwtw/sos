@@ -5,3 +5,5 @@ build/
 *.o
 *.bin
 *.iso
+
+disk*
