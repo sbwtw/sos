@@ -57,10 +57,10 @@ void AdvancedTechnologyAttachment::identify()
     // if (status == 0)
     //     return; // no device found
 
-    while (status & 0x80 != 0x80)
+    while ((status & 0x80) != 0x80)
         status = commandPort.read();
 
-    if (status & 0x21 == 0x21)
+    if ((status & 0x21) == 0x21)
         printf("error %x\n", errorPort.read());
 
     // if (status & 0x1)
@@ -87,3 +87,4 @@ void AdvancedTechnologyAttachment::write28(uint32_t sector, uint8_t *data, int c
 void AdvancedTechnologyAttachment::flush()
 {
 }
+

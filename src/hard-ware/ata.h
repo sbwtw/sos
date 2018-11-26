@@ -31,3 +31,4 @@ protected:
 };
 
 #endif // __ATA_H_
+

@@ -13,6 +13,7 @@ set(BIN_NAME sos_kernel)
 set(ISO_NAME sos.iso)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS "-Wall -m32 -nostdlib -fno-use-cxa-atexit -fno-builtin -fno-leading-underscore -fno-rtti -fno-exceptions -fno-stack-protector")
 set(CMAKE_EXE_LINKER_FLAGS "-T ${LINKER}")
 
@@ -34,3 +35,4 @@ add_custom_command(TARGET ${BIN_NAME} POST_BUILD
 
                    COMMAND grub-mkrescue --output=${ISO_NAME} iso
                    COMMAND rm -rf iso)
+
