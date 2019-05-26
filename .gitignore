@@ -1,6 +1,8 @@
 .vscode/
 build/
 .gdbinit
+.vimrc
+compile_commands.json
 
 *.o
 *.bin

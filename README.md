@@ -27,7 +27,7 @@ When build done, you can found `sos.iso` and `sos_kernel` in your build dir.
 
 `sos.iso` is a bootable image so you can start from it using VirtualBox or QEMU.
 
-# Try SOS in virtual machine
+# Try SOS in QEMU emulator
 
 ## Runtime dependencies
 - QEMU

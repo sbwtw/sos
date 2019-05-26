@@ -58,3 +58,8 @@ void srand(unsigned int seed)
 {
     next = seed;
 }
+
+int abs(int x)
+{
+    return x > 0 ? x : -x;
+}

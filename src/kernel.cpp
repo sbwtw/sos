@@ -83,16 +83,19 @@ extern "C" void __attribute__((stdcall)) putx(int num)
     put_simple_hex(num);
 }
 
-void testTaskA()
+void mainTask()
 {
     while (true)
-        printf("A");
+    {
+        int *p = new int;
+
+        delete p;
+    }
 }
 
-void testTaskB()
+void interruptTask()
 {
-    while (true)
-        printf("B");
+    asm("int $0x20");
 }
 
 typedef void (*constructor)();
@@ -158,21 +161,19 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 
     interrupts.activate();
 
-    // Task task_a(&gdt, testTaskA);
-    // Task task_b(&gdt, testTaskB);
-    // taskMgr.appendTask(&task_a);
-    // taskMgr.appendTask(&task_b);
+    Task task_main(&gdt, mainTask);
+    taskMgr.appendTask(&task_main);
 
     ScreenManager *sm = ScreenManager::instance();
-    sm->enableCaret();
+    sm->enableCaret(); // enable mouse caret
 
     CMOSManager cmosMgr;
     Time tm = cmosMgr.time();
     printf("Time: %d/%d/%d %d:%d:%d\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
     printf("RANDOM: %d, %d, %d, %d\n", rand(), rand(), rand(), rand());
 
-    ata0m.identify();
-    ata0s.identify();
+    //ata0m.identify();
+    //ata0s.identify();
 
     while (1);
 }

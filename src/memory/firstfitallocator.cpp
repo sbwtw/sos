@@ -6,10 +6,12 @@ FirstFitAllocator::FirstFitAllocator(size_t start, size_t size)
 {
 }
 
+// memory allocate
 void *FirstFitAllocator::malloc(size_t size)
 {
     MemoryChunk *r = nullptr;
 
+    // find first block which have enough size to alloc `size` bytes memory
     for (MemoryChunk *mc = firstThunk; mc; mc = mc->next)
     {
         if (!mc->allocated && mc->size > size)
@@ -24,7 +26,7 @@ void *FirstFitAllocator::malloc(size_t size)
 
     if (r->size >= size + sizeof(MemoryChunk) + 1)
     {
-        MemoryChunk *newChunk = (MemoryChunk *)((size_t)r + sizeof(MemoryChunk) + size);
+        MemoryChunk *newChunk = (MemoryChunk *)(reinterpret_cast<size_t>(r) + sizeof(MemoryChunk) + size);
 
         newChunk->allocated = false;
         newChunk->size = r->size - size - sizeof(MemoryChunk);

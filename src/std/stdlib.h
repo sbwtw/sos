@@ -3,6 +3,7 @@
 #define __STDLIB_H_
 
 int rand();
+int abs(int x);
 
 void srand(unsigned int seed);
 
