@@ -4,11 +4,12 @@ It's just a toy for learning OS technology.
 
 # Build from source
 
-## Build dependencies
+## Build dependencies (Archlinux)
 - g++
 - cmake
 - grub
 - xorriso
+- mtools
 
 ### Extra build dependencies in Debian/Ubuntu
 - grub-pc-bin
