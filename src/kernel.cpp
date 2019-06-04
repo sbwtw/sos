@@ -1,5 +1,5 @@
 
-#include "sos_io.h"
+#include "sos_base.h"
 #include "types.h"
 #include "base/gdt.h"
 #include "base/interrupts.h"
@@ -93,6 +93,11 @@ void mainTask()
     }
 }
 
+void inputTask()
+{
+
+}
+
 void interruptTask()
 {
     asm("int $0x20");
@@ -161,8 +166,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 
     interrupts.activate();
 
-    Task task_main(&gdt, mainTask);
-    taskMgr.appendTask(&task_main);
+    //Task task_main(&gdt, mainTask);
+    //taskMgr.appendTask(&task_main);
 
     ScreenManager *sm = ScreenManager::instance();
     sm->enableCaret(); // enable mouse caret
@@ -171,6 +176,13 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     Time tm = cmosMgr.time();
     printf("Time: %d/%d/%d %d:%d:%d\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
     printf("RANDOM: %d, %d, %d, %d\n", rand(), rand(), rand(), rand());
+
+    char *a = "aac";
+    char *b = "bbd";
+    printf("%s\n", a);
+
+    void *p = memcpy(a, b, 2);
+    printf("%s\n", p);
 
     //ata0m.identify();
     //ata0s.identify();

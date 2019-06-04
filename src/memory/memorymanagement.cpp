@@ -1,6 +1,6 @@
 
 #include "memorymanagement.h"
-#include "sos_io.h"
+#include "sos_base.h"
 
 MemoryAllocator *activeMemoryAllocator = nullptr;
 

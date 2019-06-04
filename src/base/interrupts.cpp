@@ -1,6 +1,6 @@
 
 #include "interrupts.h"
-#include "sos_io.h"
+#include "sos_base.h"
 #include "multitasking.h"
 
 InterruptManager *InterruptManager::ActiveInterruptManager = nullptr;

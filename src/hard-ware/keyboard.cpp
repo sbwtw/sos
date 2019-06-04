@@ -1,5 +1,5 @@
 
-#include "sos_io.h"
+#include "sos_base.h"
 #include "keyboard.h"
 #include "utils/screenmanager.h"
 
@@ -9,7 +9,7 @@ KeyboardEventHandler::KeyboardEventHandler()
 
 void KeyboardEventHandler::onKeyPressed(char key)
 {
-    // printf("PRESSED %x\t", key);
+    //printf("PRESSED %x\t", key);
 }
 
 void KeyboardEventHandler::onKeyReleased(char key)
