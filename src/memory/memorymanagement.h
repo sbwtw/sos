@@ -37,7 +37,9 @@ protected:
 };
 
 // C++ memory allocate/free stuff.
-void *operator new(size_t size);
-void operator delete(void *ptr);
+void *operator new(size_t size) noexcept(false);
+void *operator new[](size_t size) noexcept(false);
+void operator delete(void *ptr) noexcept;
+void operator delete[](void *ptr) noexcept;
 
 #endif // __MEMORY_MANAGEMENT_H_

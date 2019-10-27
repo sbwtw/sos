@@ -1,6 +1,7 @@
 
 #include "memorymanagement.h"
 #include "sos_base.h"
+#include "std/exception.h"
 
 MemoryAllocator *activeMemoryAllocator = nullptr;
 
@@ -33,11 +34,26 @@ void MemoryAllocator::dumpAllocatorInfo()
 
 void *operator new(size_t size)
 {
-    return activeMemoryAllocator->malloc(size);
+    if (size)
+        return activeMemoryAllocator->malloc(size);
+
+    // TODO: throw std::bad_alloc
+    return 0;
+}
+
+void *operator new[](size_t size)
+{
+    return operator new(size);
 }
 
 void operator delete(void *ptr)
 {
     return activeMemoryAllocator->free(ptr);
 }
+
+void operator delete[](void *ptr)
+{
+    return operator delete(ptr);
+}
+
 

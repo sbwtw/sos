@@ -12,6 +12,7 @@
 #include "memory/firstfitallocator.h"
 #include "hard-ware/cmos.h"
 #include "std/stdlib.h"
+#include "std/unistd.h"
 #include "multitasking.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
@@ -36,16 +37,18 @@ extern "C" void __attribute__((stdcall)) putc(char c)
     }
 }
 
-void put_simple_digit(int num)
+// print a unsigned digit
+void put_unsigned_digit(uint32_t unum)
 {
-    const int d = num / 10;
-    const int r = num % 10;
+    const int d = unum / 10;
+    const int r = unum % 10;
 
     if (d)
-        put_simple_digit(d);
+        put_unsigned_digit(d);
     putc(r + '0');
 }
 
+// print digit
 extern "C" void __attribute__((stdcall)) putd(int num)
 {
     if (!num)
@@ -54,10 +57,12 @@ extern "C" void __attribute__((stdcall)) putd(int num)
     if (num < 0)
     {
         putc('-');
-        num = -num;
-    }
 
-    put_simple_digit(num);
+        // TODO: overflow?
+        put_unsigned_digit(-num);
+    } else {
+        put_unsigned_digit(num);
+    }
 }
 
 void put_simple_hex(int num)
@@ -87,15 +92,30 @@ void mainTask()
 {
     while (true)
     {
-        int *p = new int;
+        unsigned int a = abs(rand() % 10);
+        int *p = new int[a];
 
-        delete p;
+        printf("mainTask alloc %d, Pointer Address: %x\n", a, p);
+
+        delete[] p;
+
+        sleep(1);
     }
 }
 
 void inputTask()
 {
+    while (true)
+    {
+        unsigned int a = abs(rand() % 10);
+        int *p = new int[a];
 
+        printf("inputTask alloc %d, Pointer Address: %x\n", a, p);
+
+        delete[] p;
+
+        sleep(1);
+    }
 }
 
 void interruptTask()
@@ -166,8 +186,10 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 
     interrupts.activate();
 
-    //Task task_main(&gdt, mainTask);
-    //taskMgr.appendTask(&task_main);
+    Task task_main(&gdt, mainTask);
+    Task task_input(&gdt, inputTask);
+    taskMgr.appendTask(&task_main);
+    taskMgr.appendTask(&task_input);
 
     ScreenManager *sm = ScreenManager::instance();
     sm->enableCaret(); // enable mouse caret
@@ -176,13 +198,6 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     Time tm = cmosMgr.time();
     printf("Time: %d/%d/%d %d:%d:%d\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
     printf("RANDOM: %d, %d, %d, %d\n", rand(), rand(), rand(), rand());
-
-    char *a = "aac";
-    char *b = "bbd";
-    printf("%s\n", a);
-
-    void *p = memcpy(a, b, 2);
-    printf("%s\n", p);
 
     //ata0m.identify();
     //ata0s.identify();

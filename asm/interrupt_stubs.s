@@ -3,8 +3,8 @@
 
 .section .text
 
-.extern _ZN16InterruptManager15handleInterruptEhj
-.global _ZN16InterruptManager22ignoreInterruptRequestEv
+.extern handleInterrupt
+.global ignoreInterruptRequest
 
 .macro HandleException number
 .global _ZN16InterruptManager16handleException\number\()Ev
@@ -14,8 +14,8 @@ _ZN16InterruptManager16handleException\number\()Ev:
 .endm
 
 .macro HandleInterruptRequest number
-.global _ZN16InterruptManager26handleInterruptRequest\number\()Ev
-_ZN16InterruptManager26handleInterruptRequest\number\()Ev:
+.global handleInterruptRequest\number\()
+handleInterruptRequest\number\():
     movb $\number + IRQ_BASE, (interrupt_number)
 
     pushl $0
@@ -45,7 +45,7 @@ int_bottom:
 
     pushl %esp
     push (interrupt_number)
-    call _ZN16InterruptManager15handleInterruptEhj
+    call handleInterrupt
     # addl $5, %esp
     movl %eax, %esp # switch stack
 
@@ -66,7 +66,7 @@ int_bottom:
 
     add $4, %esp
 
-_ZN16InterruptManager22ignoreInterruptRequestEv:
+ignoreInterruptRequest:
 
     iret
 

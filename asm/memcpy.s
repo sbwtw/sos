@@ -1,3 +1,4 @@
+/* vim: set ft=gas: */
 
 .section .rodata
     .align 8
@@ -6,7 +7,7 @@
     .global memcpy
 
 memcpy:
-    push    %ebp
+    pushl    %ebp
     movl    %esp, %ebp
 
     movl    8(%ebp), %eax
@@ -35,4 +36,3 @@ s:
 ret:
     pop     %ebp
     ret     $12
-
