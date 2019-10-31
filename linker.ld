@@ -1,7 +1,5 @@
 
-ENTRY(loader)
-OUTPUT_FORMAT(elf32-i386)
-OUTPUT_ARCH(i386:i386)
+ENTRY(bootloader)
 
 SECTIONS
 {
@@ -12,6 +10,7 @@ SECTIONS
         *(.multiboot)
         *(.text*)
         *(.rodata)
+        *(.rdata*) /* for windows PE format build */
     }
 
     .data :

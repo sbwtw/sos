@@ -10,9 +10,9 @@
 .section .text
 .extern kernelMain
 .extern callConstructors
-.global loader
+.global bootloader
 
-loader:
+bootloader:
     mov $kernel_stack, %esp
 
     call callConstructors
