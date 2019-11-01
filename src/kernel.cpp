@@ -95,7 +95,7 @@ void mainTask()
         unsigned int a = abs(rand() % 10);
         int *p = new int[a];
 
-        printf("mainTask alloc %d, Pointer Address: %x\n", a, p);
+//        printf("mainTask alloc %d, Pointer Address: %x\n", a, p);
 
         delete[] p;
 
@@ -110,7 +110,7 @@ void inputTask()
         unsigned int a = abs(rand() % 10);
         int *p = new int[a];
 
-        printf("inputTask alloc %d, Pointer Address: %x\n", a, p);
+//        printf("inputTask alloc %d, Pointer Address: %x\n", a, p);
 
         delete[] p;
 
@@ -165,15 +165,15 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 
     KeyboardDriver keyboardDriver(&interrupts, &keyboardEventHandler);
     MouseDriver mouseDriver(&interrupts, &mouseEventHandler);
-
+//
     DriverManager drvMgr;
     drvMgr.appendDriver(&mouseDriver);
-    drvMgr.appendDriver(&keyboardDriver);
+//    drvMgr.appendDriver(&keyboardDriver);
     drvMgr.activateAll();
 
     // interrupt 14
-    AdvancedTechnologyAttachment ata0m(0x1f0, 0x3f6, true);
-    AdvancedTechnologyAttachment ata0s(0x1f0, 0x3f6, false);
+//    AdvancedTechnologyAttachment ata0m(0x1f0, 0x3f6, true);
+//    AdvancedTechnologyAttachment ata0s(0x1f0, 0x3f6, false);
 
     // interrupt 15
     // AdvancedTechnologyAttachment ata1m(0x170, true);

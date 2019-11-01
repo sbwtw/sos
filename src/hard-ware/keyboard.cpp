@@ -51,7 +51,11 @@ void KeyboardDriver::activate()
     // get current state
     commandPort.write(0x20);
 
-    uint8_t status = (dataPort.read() | 0x1) & ~0x10;
+    const uint8_t data = dataPort.read();
+
+    printf("Keyboard Driver Stat: %x\n", data);
+
+    uint8_t status = (data | 0x1) & ~0x10;
     // set state
     commandPort.write(0x60);
     dataPort.write(status);
