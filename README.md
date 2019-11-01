@@ -4,18 +4,25 @@ It's just a toy for learning OS technology.
 
 # Build from source
 
-## Build dependencies (Archlinux)
-- g++
-- cmake
-- grub
-- xorriso
-- mtools
+## Build dependencies
 
-### Extra build dependencies in Debian/Ubuntu
+### Archlinux
+```
+pacman -S g++ cmake grub xorriso mtools
+```
+
+### Extra build dependencies on Debian/Ubuntu
 - grub-pc-bin
 
+### Windows
+Using `Cygwin` to install following dependency tools:
+- mingw
+- cmake
+- make
+- xorriso
+
 ## Build
-__Must using g++ as compiler, clang++ or other else is NOT support yet.__ for using Ninja as generator, just add argument `-G "Ninja"` in cmake commandline.
+__Must using g++/MinGW as compiler, clang or other else is NOT support yet.__
 ```shell
 mkdir build
 cd build
@@ -39,9 +46,14 @@ When build done, you can found `sos.iso` and `sos_kernel` in your build dir.
 qemu-system-x86_64 -boot d -cdrom sos.iso -m 256
 ```
 
-### Enable KVM & IOMMU (Intel VT-d/AMD-Vi) support
+### Enable KVM & IOMMU (Intel VT-d/AMD-Vi) support on Linux
 ```shell
 qemu-system-x86_64 -enable-kvm -machine q35,accel=kvm -device intel-iommu -cpu host -boot d -cdrom sos.iso -m 256
+```
+
+### Enable HAXM on Windows
+```shell
+qemu-system-x86_64 -accel hax -boot d -cdrom sos.iso -m 256
 ```
 
 # Screenshots
