@@ -45,6 +45,16 @@ void ScreenManager::write(char c)
     moveCurrentLocation(1, 0);
 }
 
+void ScreenManager::clean()
+{
+//    const int max = MaxScreenHeight * MaxScreenWidth;
+//    const int loc = MaxScreenWidth * currentY + currentX;
+//
+//    memset(('c' & 0xff) | 0xff00)
+//
+//    VideoMemLoc[loc] = (VideoMemLoc[loc] & 0xff00) | (c & 0xff);
+}
+
 void ScreenManager::moveCurrentLocation(int offset_x, int offset_y)
 {
     int new_x = currentX + offset_x;

@@ -2,7 +2,7 @@
 #ifndef __MULTI_TASKING_H_
 #define __MULTI_TASKING_H_
 
-#include "types.h"
+#include "std/types.h"
 
 class GlobalDescriptorTable;
 

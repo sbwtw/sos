@@ -1,6 +1,5 @@
 
-#include "sos_base.h"
-#include "types.h"
+#include "std/types.h"
 #include "base/gdt.h"
 #include "base/interrupts.h"
 #include "hard-ware/keyboard.h"
@@ -11,6 +10,7 @@
 #include "hard-ware/pci.h"
 #include "memory/firstfitallocator.h"
 #include "hard-ware/cmos.h"
+#include "std/stdio.h"
 #include "std/stdlib.h"
 #include "std/unistd.h"
 #include "multitasking.h"
@@ -141,6 +141,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     uint32_t *mem_upper = (uint32_t *)((size_t)multiboot_structure + 8);
     size_t heap = 20 * 1024 * 1024;
     FirstFitAllocator memMgr(heap, (*mem_upper) * 1024 - heap - 10 * 1024);
+
+    ScreenManager::instance()->clean();
 
     printf("sbw's Operating System\n");
     printf("number: %d - %d = %d\n", 16, 2, 16 - 2);

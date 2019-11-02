@@ -1,6 +1,6 @@
 
 #include "ata.h"
-#include "sos_base.h"
+#include "std/stdio.h"
 
 AdvancedTechnologyAttachment::AdvancedTechnologyAttachment(uint16_t io_base, uint16_t ctrl_base, bool master)
     : master(master)

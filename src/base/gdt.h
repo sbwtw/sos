@@ -2,7 +2,7 @@
 #ifndef __GDT_H_
 #define __GDT_H_
 
-#include "types.h"
+#include "std/types.h"
 
 class GlobalDescriptorTable
 {

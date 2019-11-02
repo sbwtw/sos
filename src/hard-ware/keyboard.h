@@ -2,7 +2,7 @@
 #ifndef __KEYBOARD_H_
 #define __KEYBOARD_H_
 
-#include "types.h"
+#include "std/types.h"
 #include "base/interrupts.h"
 #include "base/port.h"
 #include "hw-abstract/driver.h"

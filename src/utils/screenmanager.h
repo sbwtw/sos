@@ -2,7 +2,7 @@
 #ifndef __SCREEN_MANAGER_H_
 #define __SCREEN_MANAGER_H_
 
-#include "types.h"
+#include "std/types.h"
 #include "blinkingcursor.h"
 
 class ScreenManager
@@ -12,6 +12,8 @@ public:
 
     static uint8_t maximumScreenWidth();
     static uint8_t maximumScreenHeight();
+
+    void clean();
 
     void write(char c);
     uint8_t x() const { return currentX; }

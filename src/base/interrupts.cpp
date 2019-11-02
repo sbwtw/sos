@@ -1,6 +1,6 @@
 
 #include "interrupts.h"
-#include "sos_base.h"
+#include "std/stdio.h"
 #include "multitasking.h"
 
 struct GateDescriptor

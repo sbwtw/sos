@@ -10,21 +10,22 @@ memcpy:
     pushl    %ebp
     movl    %esp, %ebp
 
-    movl    8(%ebp), %eax
-    movl    16(%ebp), %ecx
+    movl    8(%ebp), %eax # argument 1, dst
+    movl    16(%ebp), %ecx # argument 3, size
     cmp     $0, %ecx
-    je      ret
+    je      end
 
     push    %ebx
     push    %esi
     push    %edi
 
-    movl    12(%ebp), %esi
+    movl    12(%ebp), %esi # argument 2, src
     movl    %eax, %edi
 
+# copy
 s:
-    movl    (%esi), %ebx
-    movl    %ebx, (%edi)
+    movb    (%esi), %bl
+    movb    %bl, (%edi)
     inc     %esi
     inc     %edi
     loop    s
@@ -33,6 +34,6 @@ s:
     pop     %esi
     pop     %ebx
 
-ret:
+end:
     pop     %ebp
     ret     $12

@@ -2,7 +2,7 @@
 #ifndef __MEMORY_MANAGEMENT_H_
 #define __MEMORY_MANAGEMENT_H_
 
-#include "types.h"
+#include "std/types.h"
 
 /**
  * Memory Block Information.

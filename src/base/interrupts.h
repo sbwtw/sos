@@ -2,7 +2,7 @@
 #ifndef __INTERRUPTS_H_
 #define __INTERRUPTS_H_
 
-#include "types.h"
+#include "std/types.h"
 #include "port.h"
 #include "gdt.h"
 
