@@ -21,7 +21,7 @@ set(CMAKE_CXX_FLAGS "-g -Wall -m32 -nostdlib -ffreestanding -fno-stack-check -mn
 set(CMAKE_EXE_LINKER_FLAGS "-T${LINKER_SCRIPT}")
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-add_executable(${BIN_NAME} ${ASM} ${SRCS} src/std/stdio.h)
+add_executable(${BIN_NAME} ${ASM} ${SRCS})
 target_include_directories(${BIN_NAME} PUBLIC include src)
 
 # create kernel image
