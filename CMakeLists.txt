@@ -32,7 +32,7 @@ add_custom_command(TARGET ${BIN_NAME} POST_BUILD
         )
 
 # create bootable iso image
-if (WIN32)
+IF (WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "CYGWIN")
     add_custom_command(TARGET ${BIN_NAME} POST_BUILD
             COMMAND cp ../boot/grub/stage2_eltorito iso/boot/grub
 
@@ -43,7 +43,7 @@ if (WIN32)
 
             COMMAND mkisofs -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4 -boot-info-table -o ${ISO_NAME} iso
             )
-else ()
+ELSE ()
     add_custom_command(TARGET ${BIN_NAME} POST_BUILD
             COMMAND echo 'set timeout=0' >> iso/boot/grub/grub.cfg
             COMMAND echo 'set default=0' >> iso/boot/grub/grub.cfg
@@ -55,7 +55,7 @@ else ()
 
             COMMAND grub-mkrescue --output=${ISO_NAME} iso
             )
-endif()
+ENDIF()
 
 # clear
 add_custom_command(TARGET ${BIN_NAME} POST_BUILD COMMAND rm -rf iso ${IMAGE_NAME})
