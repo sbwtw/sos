@@ -169,7 +169,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     MouseDriver mouseDriver(&interrupts, &mouseEventHandler);
 //
     DriverManager drvMgr;
-    drvMgr.appendDriver(&mouseDriver);
+//    drvMgr.appendDriver(&mouseDriver);
 //    drvMgr.appendDriver(&keyboardDriver);
     drvMgr.activateAll();
 
