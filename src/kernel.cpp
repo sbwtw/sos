@@ -174,7 +174,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     drvMgr.activateAll();
 
     // interrupt 14
-//    AdvancedTechnologyAttachment ata0m(0x1f0, 0x3f6, true);
+    AdvancedTechnologyAttachment ata0m(0x1f0, 0x3f6, true);
 //    AdvancedTechnologyAttachment ata0s(0x1f0, 0x3f6, false);
 
     // interrupt 15
@@ -201,7 +201,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     printf("Time: %d/%d/%d %d:%d:%d\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
     printf("RANDOM: %d, %d, %d, %d\n", rand(), rand(), rand(), rand());
 
-    //ata0m.identify();
+    ata0m.identify();
     //ata0s.identify();
 
     while (1);

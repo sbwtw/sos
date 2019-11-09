@@ -12,26 +12,31 @@ AdvancedTechnologyAttachment::AdvancedTechnologyAttachment(uint16_t io_base, uin
     , lbaHiPort(io_base + 5)
     , devicePort(io_base + 6)
     , commandPort(io_base + 7)
-
-    , controlPort(ctrl_base)
-    , infoPort(ctrl_base + 1)
+    , controlPort(io_base + 0x206)
 {
 }
 
 void AdvancedTechnologyAttachment::identify()
 {
     // LBA 48Bit
-    devicePort.write(0x40 | (master << 4) | 0xd0);
-    errorPort.write(0);
-    sectorCountPort.write(0);
-    lbaLowPort.write(0);
-    lbaMidPort.write(0);
-    lbaHiPort.write(0);
-    sectorCountPort.write(1);
-    lbaLowPort.write(0);
-    lbaMidPort.write(0);
-    lbaHiPort.write(0);
-    commandPort.write(0x24);
+    devicePort.write(master ? 0xa0 : 0xb0);
+    controlPort.write(0);
+
+    devicePort.write(0xa0);
+    uint8_t status = commandPort.read();
+    printf("Status: %x\n", status);
+
+//    devicePort.write(0x40 | (master << 4) | 0xd0);
+//    errorPort.write(0);
+//    sectorCountPort.write(0);
+//    lbaLowPort.write(0);
+//    lbaMidPort.write(0);
+//    lbaHiPort.write(0);
+//    sectorCountPort.write(1);
+//    lbaLowPort.write(0);
+//    lbaMidPort.write(0);
+//    lbaHiPort.write(0);
+//    commandPort.write(0x24);
 
     //printf("ATA: %x\n", dataPort.read());
 
@@ -53,15 +58,15 @@ void AdvancedTechnologyAttachment::identify()
     // lbaHiPort.write(0);
     // commandPort.write(0xec);
 
-    int status = commandPort.read();
+//    int status = commandPort.read();
     // if (status == 0)
     //     return; // no device found
 
-    while ((status & 0x80) != 0x80)
-        status = commandPort.read();
-
-    if ((status & 0x21) == 0x21)
-        printf("error %x\n", errorPort.read());
+//    while ((status & 0x80) != 0x80)
+//        status = commandPort.read();
+//
+//    if ((status & 0x21) == 0x21)
+//        printf("error %x\n", errorPort.read());
 
     // if (status & 0x1)
     // {

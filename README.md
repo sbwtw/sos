@@ -57,7 +57,7 @@ qemu-system-x86_64 -accel hax -boot d -cdrom sos.iso -m 256
 ```
 
 # Screenshots
-![sos screenshots](screenshots/2018-07-21-115918_746x484_scrot.png)
+![sos screenshots](screenshots/Screenshot_20191109_230102.png)
 
 # License
 This project is licensed under the [MIT](LICENSE) license.

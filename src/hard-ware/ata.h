@@ -18,16 +18,14 @@ public:
 protected:
     bool master;
     Port16Bit dataPort;
-    Port16Bit errorPort;
-    Port16Bit sectorCountPort;
-    Port16Bit lbaLowPort;
-    Port16Bit lbaMidPort;
-    Port16Bit lbaHiPort;
+    Port8Bit errorPort;
+    Port8Bit sectorCountPort;
+    Port8Bit lbaLowPort;
+    Port8Bit lbaMidPort;
+    Port8Bit lbaHiPort;
     Port8Bit devicePort;
     Port8Bit commandPort;
-
     Port8Bit controlPort;
-    Port8Bit infoPort;
 };
 
 #endif // __ATA_H_
