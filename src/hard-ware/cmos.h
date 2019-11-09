@@ -4,6 +4,10 @@
 
 #include "base/port.h"
 
+/**
+ * 读取 CMOS 数据
+ * */
+
 struct Time
 {
     int year;
@@ -27,7 +31,7 @@ protected:
     uint8_t readRTCRegister(int reg);
 
 private:
-    Port8Bit commandPort;
+    Port8BitSlow commandPort;
     Port8Bit dataPort;
 
     Time tm;
