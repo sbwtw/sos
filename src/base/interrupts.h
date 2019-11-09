@@ -1,4 +1,12 @@
 
+/**
+ * 用于 Intel 8259A 可编程中断控制器的中断控制
+ * 
+ * https://wiki.osdev.org/8259_PIC
+ * https://pdos.csail.mit.edu/6.828/2016/readings/hardware/8259A.pdf
+ * */
+
+
 #ifndef __INTERRUPTS_H_
 #define __INTERRUPTS_H_
 

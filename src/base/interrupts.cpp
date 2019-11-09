@@ -75,6 +75,7 @@ InterruptManager::InterruptManager(GlobalDescriptorTable *gdt, TaskManager *task
     setInterruptDescriptorTableEntry(0x21, code_segment, &handleInterruptRequest0x01, 0, IDT_INTERRUPT_GATE);
     setInterruptDescriptorTableEntry(0x2c, code_segment, &handleInterruptRequest0x0c, 0, IDT_INTERRUPT_GATE);
 
+    // 初始化 PIC
     picMasterCommand.write(0x11);
     picSlaveCommand.write(0x11);
 
