@@ -7,6 +7,7 @@
 
 #include "types.h"
 
+extern "C" void __attribute__((stdcall)) putc(char c);
 extern "C" int __attribute__((cdecl)) printf(const char *format, ...);
 extern "C" void __attribute__((stdcall)) *memcpy(void *dst, void *src, uint32_t size);
 extern "C" void __attribute__((stdcall)) *memset(void *dst, int c, uint32_t n);

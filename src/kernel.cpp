@@ -154,10 +154,6 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     printf("AVAILABLE MEMORY START: %x\n", heap);
     printf("HEAP: %x - %x\n", heap, (*mem_upper) * 1024 - heap - 10 * 1024);
 
-    memMgr.dumpAllocatorInfo();
-    memMgr.malloc(512);
-    memMgr.dumpAllocatorInfo();
-
     GlobalDescriptorTable gdt;
     TaskManager taskMgr;
     InterruptManager interrupts(&gdt, &taskMgr);
@@ -174,13 +170,13 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     drvMgr.activateAll();
 
     // interrupt 14
-    AdvancedTechnologyAttachment ata0m(0x1f0, 0x3f6, true);
-//    AdvancedTechnologyAttachment ata0s(0x1f0, 0x3f6, false);
+    AtaChs ata0m(0x1f0, 0x3f6, true);
+    AtaChs ata0s(0x1f0, 0x3f6, false);
 
     // interrupt 15
-    // AdvancedTechnologyAttachment ata1m(0x170, true);
+    // AtaChs ata1m(0x170, true);
     // ata1m.identify();
-    // AdvancedTechnologyAttachment ata1s(0x170, false);
+    // AtaChs ata1s(0x170, false);
     // ata1s.identify();
 
     // PeripheralComponentInterconnectController pciController;
@@ -202,7 +198,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     printf("RANDOM: %d, %d, %d, %d\n", rand(), rand(), rand(), rand());
 
     ata0m.identify();
-    //ata0s.identify();
+    ata0s.identify();
 
     while (1);
 }

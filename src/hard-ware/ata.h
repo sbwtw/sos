@@ -4,15 +4,29 @@
 
 #include "base/port.h"
 
-class AdvancedTechnologyAttachment
+/**
+ * ATA Hard disk driver
+ *
+ * 以 CHS(Cylinder, Head, Sector) 模式实现的 ATA 磁盘驱动
+ *
+ * https://wiki.osdev.org/ATA_PIO_Mode#CHS_mode
+ *
+ * Cylinder: [0, 1023]
+ * Head: [0, 15]
+ * Sector: [1, 63]
+ *
+ * 最大支持 512MiB
+ * */
+
+class AtaChs
 {
 
 public:
-    AdvancedTechnologyAttachment(uint16_t io_base, uint16_t ctrl_base, bool master);
+    AtaChs(uint16_t io_base, uint16_t ctrl_base, bool master);
 
     void identify();
-    void read28(uint32_t sector);
-    void write28(uint32_t sector, uint8_t *data, int count);
+    void read(uint32_t sector, uint8_t *data);
+    void write(uint32_t sector, uint8_t *data, int count);
     void flush();
 
 protected:

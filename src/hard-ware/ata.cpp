@@ -2,7 +2,20 @@
 #include "ata.h"
 #include "std/stdio.h"
 
-AdvancedTechnologyAttachment::AdvancedTechnologyAttachment(uint16_t io_base, uint16_t ctrl_base, bool master)
+union SectorCount
+{
+    uint64_t sectors;
+
+    struct
+    {
+        uint16_t s0;
+        uint16_t s1;
+        uint16_t s2;
+        uint16_t s3;
+    };
+};
+
+AtaChs::AtaChs(uint16_t io_base, uint16_t ctrl_base, bool master)
     : master(master)
     , dataPort(io_base)
     , errorPort(io_base + 1)
@@ -12,84 +25,98 @@ AdvancedTechnologyAttachment::AdvancedTechnologyAttachment(uint16_t io_base, uin
     , lbaHiPort(io_base + 5)
     , devicePort(io_base + 6)
     , commandPort(io_base + 7)
-    , controlPort(io_base + 0x206)
+    , controlPort(ctrl_base)
 {
 }
 
-void AdvancedTechnologyAttachment::identify()
+void AtaChs::identify()
 {
-    // LBA 48Bit
     devicePort.write(master ? 0xa0 : 0xb0);
     controlPort.write(0);
 
+    // status check
     devicePort.write(0xa0);
     uint8_t status = commandPort.read();
-    printf("Status: %x\n", status);
+    // channel unavailable
+    if (status == 0xff)
+        return;
 
-//    devicePort.write(0x40 | (master << 4) | 0xd0);
-//    errorPort.write(0);
-//    sectorCountPort.write(0);
-//    lbaLowPort.write(0);
-//    lbaMidPort.write(0);
-//    lbaHiPort.write(0);
-//    sectorCountPort.write(1);
-//    lbaLowPort.write(0);
-//    lbaMidPort.write(0);
-//    lbaHiPort.write(0);
-//    commandPort.write(0x24);
+    // IDENTIFY command
+    devicePort.write(master ? 0xa0 : 0xb0);
+    sectorCountPort.write(0);
+    lbaLowPort.write(0);
+    lbaMidPort.write(0);
+    lbaHiPort.write(0);
+    commandPort.write(0xec);
 
-    //printf("ATA: %x\n", dataPort.read());
+    status = commandPort.read();
+    // no device
+    if (status == 0x00)
+        return;
 
-    // devicePort.write(master ? 0xa0 : 0xb0);
-    // controlPort.write(0);
-    // devicePort.write(0xa0);
+    while ((status & 0x80) == 0x80 && (status & 0x01) != 0x01)
+        status = commandPort.read();
 
-    // printf("aaa1");
-    // uint8_t status = commandPort.read();
-    // if (status == 0xff)
-    //     return;
+    // error
+    if (status & 0x01)
+    {
+        printf("Identify Failed, Error = %x\n", status);
+        return;
+    }
 
-    // printf("aaa");
+    uint16_t data[256];
+    for (auto i(0); i != 256; ++i)
+        data[i] = dataPort.read();
 
-    // devicePort.write(master ? 0xa0 : 0xb0);
-    // sectorCountPort.write(0);
-    // lbaLowPort.write(0);
-    // lbaMidPort.write(0);
-    // lbaHiPort.write(0);
-    // commandPort.write(0xec);
+    printf("Disk Information:\n");
 
-//    int status = commandPort.read();
-    // if (status == 0)
-    //     return; // no device found
-
-//    while ((status & 0x80) != 0x80)
-//        status = commandPort.read();
-//
-//    if ((status & 0x21) == 0x21)
-//        printf("error %x\n", errorPort.read());
-
-    // if (status & 0x1)
-    // {
-    //     printf("ERROR");
-    //     return;
-    // }
-
-    // for (uint16_t i(0); i != 256; ++i)
-    // {
-    //     uint16_t data = dataPort.read();
-    //     printf("%c %c\n", (data >> 8) & 0xff, data & 0xff);
-    // }
+    // Read disk size
+    SectorCount sector { 0 };
+    sector.s0 = data[100];
+    sector.s1 = data[101];
+    sector.s2 = data[102];
+    sector.s3 = data[103];
+    printf("%d sectors\t", sector.sectors);
+    printf("%d MiB\t", sector.sectors / 2048);
+    printf("\n");
 }
 
-void AdvancedTechnologyAttachment::read28(uint32_t sector)
+void AtaChs::read(uint32_t sector, uint8_t *data)
+{
+    // sector error
+    if ((sector & 0xf0000000) != 0)
+        return;
+
+    devicePort.write((master ? 0xe0 : 0xf0) | ((sector & 0x0f000000) >> 24));
+    errorPort.write(0);
+    sectorCountPort.write(1);
+
+    lbaLowPort.write(sector & 0x000000ff);
+    lbaLowPort.write((sector & 0x0000ff00) >> 8);
+    lbaLowPort.write((sector & 0x00ff0000) >> 16);
+    commandPort.write(0x30);
+
+    uint8_t status = commandPort.read();
+    while ((status & 0x80) == 0x80 && (status && 0x01) != 0x01)
+        status = commandPort.read();
+
+    if (status & 0x01)
+        return;
+
+
+    for (uint16_t i(0); i != 256; i += 2)
+    {
+        uint16_t r = dataPort.read();
+        data[i] = r & 0x00ff;
+        data[i + 1] = (r >> 8) & 0x00ff;
+    }
+}
+
+void AtaChs::write(uint32_t sector, uint8_t *data, int count)
 {
 }
 
-void AdvancedTechnologyAttachment::write28(uint32_t sector, uint8_t *data, int count)
-{
-}
-
-void AdvancedTechnologyAttachment::flush()
+void AtaChs::flush()
 {
 }
 
