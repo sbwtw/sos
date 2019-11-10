@@ -37,7 +37,7 @@ public:
 
     bool deviceHasFuncs(uint16_t bus, uint16_t device);
     uint32_t read(uint16_t bus, uint16_t device, uint16_t func, uint32_t reg_offset);
-    PeripheralComponentInterconnectDescriptor getDeivceDescriptor(uint16_t bus, uint16_t device, uint16_t func);
+    PeripheralComponentInterconnectDescriptor getDeviceDescriptor(uint16_t bus, uint16_t device, uint16_t func);
     void write(uint16_t bus, uint16_t device, uint16_t func, uint32_t reg_offset, uint32_t value);
     void selectDrivers(DriverManager *driverMgr);
 

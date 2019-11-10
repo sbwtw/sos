@@ -53,7 +53,7 @@ void PeripheralComponentInterconnectController::selectDrivers(DriverManager *dri
             const int func_num = deviceHasFuncs(bus, device) ? 8 : 1;
             for (int func(0); func != func_num; ++func)
             {
-                auto pci = getDeivceDescriptor(bus, device, func);
+                auto pci = getDeviceDescriptor(bus, device, func);
 
                 if (pci.vendorId == 0 || pci.vendorId == 0xffff)
                     break;
@@ -65,7 +65,7 @@ void PeripheralComponentInterconnectController::selectDrivers(DriverManager *dri
 }
 
 PeripheralComponentInterconnectDescriptor
-PeripheralComponentInterconnectController::getDeivceDescriptor(uint16_t bus, uint16_t device, uint16_t func)
+PeripheralComponentInterconnectController::getDeviceDescriptor(uint16_t bus, uint16_t device, uint16_t func)
 {
     PeripheralComponentInterconnectDescriptor r;
     r.bus = bus;

@@ -169,18 +169,18 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 //    drvMgr.appendDriver(&keyboardDriver);
     drvMgr.activateAll();
 
-    // interrupt 14
     AtaChs ata0m(0x1f0, 0x3f6, true);
     AtaChs ata0s(0x1f0, 0x3f6, false);
+    AtaChs ata1m(0x170, 0x376, true);
+    AtaChs ata1s(0x170, 0x376, false);
 
-    // interrupt 15
-    // AtaChs ata1m(0x170, true);
-    // ata1m.identify();
-    // AtaChs ata1s(0x170, false);
-    // ata1s.identify();
+    ata0m.identify();
+    ata0s.identify();
+    ata1m.identify();
+    ata1s.identify();
 
-    // PeripheralComponentInterconnectController pciController;
-    // pciController.selectDrivers(&drvMgr);
+//    PeripheralComponentInterconnectController pciController;
+//    pciController.selectDrivers(&drvMgr);
 
     interrupts.activate();
 
@@ -197,8 +197,6 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     printf("Time: %d/%d/%d %d:%d:%d\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
     printf("RANDOM: %d, %d, %d, %d\n", rand(), rand(), rand(), rand());
 
-    ata0m.identify();
-    ata0s.identify();
 
     while (1);
 }

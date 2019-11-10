@@ -18,6 +18,7 @@ public:
     explicit Port(uint16_t port_number);
     virtual ~Port();
 
+    uint16_t port() const { return _portNumber; }
     virtual void write(Type data);
     virtual Type read();
 

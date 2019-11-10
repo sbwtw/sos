@@ -60,7 +60,7 @@ void AtaChs::identify()
     // error
     if (status & 0x01)
     {
-        printf("Identify Failed, Error = %x\n", status);
+        printf("Identify Failed, Base = %x, Control = %x, Master = %d, Error = %x\n", dataPort.port(), controlPort.port(), master, status);
         return;
     }
 
@@ -68,7 +68,7 @@ void AtaChs::identify()
     for (auto i(0); i != 256; ++i)
         data[i] = dataPort.read();
 
-    printf("Disk Information:\n");
+    printf("Disk Information: Base = %x, Control = %x, Master = %d, ", dataPort.port(), controlPort.port(), master, status);
 
     // Read disk size
     SectorCount sector { 0 };
