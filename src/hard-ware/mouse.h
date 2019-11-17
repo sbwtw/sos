@@ -30,6 +30,9 @@ public:
 
     void activate() override;
 
+protected:
+    void waitAck();
+
 private:
     int8_t buffer[3];
     uint8_t offset;

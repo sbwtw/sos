@@ -14,6 +14,7 @@
 #include "std/stdlib.h"
 #include "std/unistd.h"
 #include "multitasking.h"
+#include "hard-ware/comport.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
@@ -166,18 +167,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 //
     DriverManager drvMgr;
     drvMgr.appendDriver(&mouseDriver);
-//    drvMgr.appendDriver(&keyboardDriver);
+    drvMgr.appendDriver(&keyboardDriver);
     drvMgr.activateAll();
-
-    AtaChs ata0m(0x1f0, 0x3f6, true);
-    AtaChs ata0s(0x1f0, 0x3f6, false);
-    AtaChs ata1m(0x170, 0x376, true);
-    AtaChs ata1s(0x170, 0x376, false);
-
-    ata0m.identify();
-    ata0s.identify();
-    ata1m.identify();
-    ata1s.identify();
 
 //    PeripheralComponentInterconnectController pciController;
 //    pciController.selectDrivers(&drvMgr);
@@ -197,6 +188,19 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     printf("Time: %d/%d/%d %d:%d:%d\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
     printf("RANDOM: %d, %d, %d, %d\n", rand(), rand(), rand(), rand());
 
+    AtaChs *ata0m = new AtaChs(0x1f0, 0x3f6, true);
+//    AtaChs ata0s(0x1f0, 0x3f6, false);
+//    AtaChs ata1m(0x170, 0x376, true);
+//    AtaChs ata1s(0x170, 0x376, false);
+
+    ata0m->identify();
+//    ata0s.identify();
+//    ata1m.identify();
+//    ata1s.identify();
+
+    ComPort com1(COM1_ADDR);
+    com1.init();
+    com1.write("Hello, World!\n");
 
     while (1);
 }

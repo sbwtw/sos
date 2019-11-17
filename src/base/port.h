@@ -11,6 +11,9 @@
  * PortSlow<Type> 实现了端口直接读取和带延迟的写入
  * */
 
+uint8_t inb(uint16_t address);
+void outb(uint16_t address, uint8_t data);
+
 template <typename Type>
 class Port
 {

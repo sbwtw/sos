@@ -17,17 +17,13 @@ inline void delay(uint32_t n)
 template <>
 void Port<uint8_t>::write(uint8_t data)
 {
-    asm volatile("outb %0, %1" : : "a"(data), "Nd"(_portNumber));
+    outb(_portNumber, data);
 }
 
 template <>
 uint8_t Port<uint8_t>::read()
 {
-    uint8_t result;
-
-    asm volatile("inb %1, %0" : "=a"(result) : "Nd"(_portNumber));
-
-    return result;
+    return inb(_portNumber);
 }
 
 template <>
@@ -74,4 +70,16 @@ void PortSlow<uint16_t>::write(uint16_t data) {
     asm volatile("outw %0, %1" : : "a"(data), "Nd"(_portNumber));
 
     delay(100);
+}
+
+uint8_t inb(uint16_t address) {
+    uint8_t result;
+
+    asm volatile("inb %1, %0" : "=a"(result) : "Nd"(address));
+
+    return result;
+}
+
+void outb(uint16_t address, uint8_t data) {
+    asm volatile("outb %0, %1" : : "a"(data), "Nd"(address));
 }

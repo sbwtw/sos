@@ -3,6 +3,11 @@
 #include "mouse.h"
 #include "utils/screenmanager.h"
 
+/**
+ *
+ * https://wiki.osdev.org/%228042%22_PS/2_Controller
+ * */
+
 MouseEventHandler::MouseEventHandler()
 {
 }
@@ -44,15 +49,6 @@ uint32_t MouseDriver::handleInterrupt(uint32_t esp)
         ScreenManager *sm = ScreenManager::instance();
 
         sm->moveCareLocation(buffer[1], -buffer[2]);
-
-        // for (uint8_t i(0); i != 3; ++i)
-        // {
-            // if (buffer[0] & (0x1 << i) != buttons & (0x1 << i))
-            // {
-                // button pressed
-            // }
-        // }
-        // buttons = buffer[0];
     }
 
     return esp;
@@ -60,17 +56,31 @@ uint32_t MouseDriver::handleInterrupt(uint32_t esp)
 
 void MouseDriver::activate()
 {
+
     // activate interrupts
     commandPort.write(0xa8);
-    // get current state
+    waitAck();
+
+    // get Compaq status
     commandPort.write(0x20);
 
-    uint8_t status = dataPort.read() | 0x2;
-    // set state
+    uint8_t status = dataPort.read();
+    status |= 0x2;
+    status &= ~0x20;
+
+    // set Compaq status
     commandPort.write(0x60);
     dataPort.write(status);
+    // ???
+//    waitAck();
 
     commandPort.write(0xd4);
     dataPort.write(0xf4);
-    dataPort.read();
+    waitAck();
+}
+
+void MouseDriver::waitAck()
+{
+    while (dataPort.read() != 0xfa)
+        asm ("nop");
 }

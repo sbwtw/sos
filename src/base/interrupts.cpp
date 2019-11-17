@@ -123,6 +123,9 @@ void InterruptManager::deactivate()
 // 调用中断处理子程序
 uint32_t InterruptManager::doHandleInterrupt(uint8_t interrupt_number, uint32_t esp)
 {
+    if (interrupt_number != 0x20)
+        printf("Handle Interrupt %x\n", interrupt_number);
+
     // 如果设置了处理程序，则转向对应处理程序
     if (interruptHandlers[interrupt_number] != nullptr)
     {
