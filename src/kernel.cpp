@@ -198,9 +198,24 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 //    ata1m.identify();
 //    ata1s.identify();
 
+    uint8_t data[512] = { 0 };
+    for (int i(0); i != 512; ++i)
+        data[i] = i % 256;
+
+//    printf("Write Start\n");
+//    ata0m->write(1, data, 256);
+//    printf("Write Finished\n");
+//    ata0m->flush();
+//    printf("flush Finished\n");
+    ata0m->read(1, data);
+    printf("read Finished\n");
+
     ComPort com1(COM1_ADDR);
     com1.init();
-    com1.write("Hello, World!\n");
+    for (int i(0); i != 512; ++i)
+        com1.write(data[i]);
+
+    printf("Start #");
 
     while (1);
 }

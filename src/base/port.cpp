@@ -1,7 +1,8 @@
 
 #include "port.h"
 
-inline void delay(uint32_t n)
+
+void __attribute__ ((noinline)) delay(uint32_t n)
 {
     asm volatile("movl %0, %%ecx\n"
                  "start_delay:\n"

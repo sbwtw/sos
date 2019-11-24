@@ -29,6 +29,9 @@ public:
     void write(uint32_t sector, uint8_t *data, int count);
     void flush();
 
+    bool checkStatus();
+    void softReset();
+
 protected:
     bool master;
     Port16Bit dataPort;
