@@ -188,32 +188,32 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     printf("Time: %d/%d/%d %d:%d:%d\n", tm.year, tm.month, tm.day, tm.hour + 8, tm.minute, tm.second);
     printf("RANDOM: %d, %d, %d, %d\n", rand(), rand(), rand(), rand());
 
-    AtaChs *ata0m = new AtaChs(0x1f0, 0x3f6, true);
+//    AtaChs *ata0m = new AtaChs(0x1f0, 0x3f6, true);
 //    AtaChs ata0s(0x1f0, 0x3f6, false);
 //    AtaChs ata1m(0x170, 0x376, true);
 //    AtaChs ata1s(0x170, 0x376, false);
 
-    ata0m->identify();
+//    ata0m->identify();
 //    ata0s.identify();
 //    ata1m.identify();
 //    ata1s.identify();
 
-    uint8_t data[512] = { 0 };
-    for (int i(0); i != 512; ++i)
-        data[i] = i % 256;
+//    uint8_t data[512] = { 0 };
+//    for (int i(0); i != 512; ++i)
+//        data[i] = i % 256;
 
 //    printf("Write Start\n");
 //    ata0m->write(1, data, 256);
 //    printf("Write Finished\n");
 //    ata0m->flush();
 //    printf("flush Finished\n");
-    ata0m->read(1, data);
-    printf("read Finished\n");
-
-    ComPort com1(COM1_ADDR);
-    com1.init();
-    for (int i(0); i != 512; ++i)
-        com1.write(data[i]);
+//    ata0m->read(1, data);
+//    printf("read Finished\n");
+//
+//    ComPort com1(COM1_ADDR);
+//    com1.init();
+//    for (int i(0); i != 512; ++i)
+//        com1.write(data[i]);
 
     printf("Start #");
 
