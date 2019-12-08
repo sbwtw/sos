@@ -44,7 +44,7 @@ struct SegmentDescriptor {
     short privl: 2;             // bit 45~46, 权限, 0 = kernel, 3 = user
     bool pr: 1;                 // bit 47, 有效的段设置为 1
     uint8_t limit_hi: 4;        // bit 48~51, Limit[16:19]
-    short _reversed: 1;         // bit 52, 保留, 设置为 0
+    bool _reversed: 1;          // bit 52, 保留, 设置为 0
     bool l: 1;                  // bit 53, 设置为 1 表明这是 x86-64 代码段
     bool sz: 1;                 // bit 54, 0 代表 16 位保护模式, 1 代表 32 位保护模式
                                 //         在 x86-64 下当 l 设置为 1 时这里应该为 0, Sz = 1, L = 1 保留
@@ -86,20 +86,27 @@ void gdt_init()
     memset(GDT_TABLE, 0, sizeof(GDT_TABLE));
 
     // null segment 0 0 0
-    set_segment_descriptor(&GDT_TABLE[0], 0, 0);
+    SegmentDescriptor &null_seg = GDT_TABLE[0];
+    set_segment_descriptor(&null_seg, 0, 0);
+
     // unused segment 0 0 0
-    set_segment_descriptor(&GDT_TABLE[1], 0, 0);
+    SegmentDescriptor &unused_seg = GDT_TABLE[1];
+    set_segment_descriptor(&unused_seg, 0, 0);
+
     // code segment 0 64*1024*1024 0x9a
-    set_segment_descriptor(&GDT_TABLE[2], 0, 64 * 1024 * 1024);
-    GDT_TABLE[2].rw = 1;
-    GDT_TABLE[2].ex = 1;
-    GDT_TABLE[2].s = 1;
-    GDT_TABLE[2].pr = 1;
+    SegmentDescriptor &code_seg = GDT_TABLE[2];
+    set_segment_descriptor(&code_seg, 0, 64 * 1024 * 1024);
+    code_seg.rw = 1;
+    code_seg.ex = 1;
+    code_seg.s = 1;
+    code_seg.pr = 1;
+
     // data segment 0 64*1024*1024 0x92
-    set_segment_descriptor(&GDT_TABLE[3], 0, 64 * 1024 * 1024);
-    GDT_TABLE[3].rw = 1;
-    GDT_TABLE[3].s = 1;
-    GDT_TABLE[3].pr = 1;
+    SegmentDescriptor &data_seg = GDT_TABLE[3];
+    set_segment_descriptor(&data_seg, 0, 64 * 1024 * 1024);
+    data_seg.rw = 1;
+    data_seg.s = 1;
+    data_seg.pr = 1;
 
     // load gdt to cpu
     GDTDescriptor gdt { sizeof(GDT_TABLE), (uint32_t)GDT_TABLE };
