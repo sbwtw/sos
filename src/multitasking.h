@@ -36,7 +36,7 @@ class Task
     friend class TaskManager;
 
 public:
-    Task(GlobalDescriptorTable *gdt, void entryPoint());
+    Task(void entryPoint());
     ~Task();
 
 private:

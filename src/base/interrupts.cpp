@@ -55,14 +55,15 @@ void InterruptManager::setInterruptDescriptorTableEntry(
     InterruptDescriptorTable[interrupt_number]._reserved = 0;
 }
 
-InterruptManager::InterruptManager(GlobalDescriptorTable *gdt, TaskManager *task_manager)
+InterruptManager::InterruptManager(TaskManager *task_manager)
     : picMasterCommand(0x20)
     , picMasterData(0x21)
     , picSlaveCommand(0xa0)
     , picSlaveData(0xa1)
     , taskManager(task_manager)
 {
-    uint16_t code_segment = gdt->codeSegmentSelector();
+    //uint16_t code_segment = gdt->codeSegmentSelector();
+    uint16_t code_segment = get_code_segment();
     const uint8_t IDT_INTERRUPT_GATE = 0xe;
 
     for (uint16_t i(0); i != 256; ++i)
@@ -123,8 +124,8 @@ void InterruptManager::deactivate()
 // 调用中断处理子程序
 uint32_t InterruptManager::doHandleInterrupt(uint8_t interrupt_number, uint32_t esp)
 {
-    if (interrupt_number != 0x20)
-        printf("Handle Interrupt %x\n", interrupt_number);
+    //if (interrupt_number != 0x20)
+        //printf("Handle Interrupt %x\n", interrupt_number);
 
     // 如果设置了处理程序，则转向对应处理程序
     if (interruptHandlers[interrupt_number] != nullptr)

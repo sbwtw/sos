@@ -1,5 +1,6 @@
 .vscode/
 .idea/
+.clangd/
 cmake-build*/
 build/
 .gdbinit

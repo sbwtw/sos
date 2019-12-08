@@ -96,7 +96,7 @@ void mainTask()
         unsigned int a = abs(rand() % 10);
         int *p = new int[a];
 
-//        printf("mainTask alloc %d, Pointer Address: %x\n", a, p);
+        //printf("mainTask alloc %d, Pointer Address: %x\n", a, p);
 
         delete[] p;
 
@@ -111,7 +111,7 @@ void inputTask()
         unsigned int a = abs(rand() % 10);
         int *p = new int[a];
 
-//        printf("inputTask alloc %d, Pointer Address: %x\n", a, p);
+        //printf("inputTask alloc %d, Pointer Address: %x\n", a, p);
 
         delete[] p;
 
@@ -155,9 +155,10 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     printf("AVAILABLE MEMORY START: %x\n", heap);
     printf("HEAP: %x - %x\n", heap, (*mem_upper) * 1024 - heap - 10 * 1024);
 
-    GlobalDescriptorTable gdt;
+    gdt_init();
+    //GlobalDescriptorTable gdt;
     TaskManager taskMgr;
-    InterruptManager interrupts(&gdt, &taskMgr);
+    InterruptManager interrupts(&taskMgr);
 
     KeyboardEventHandler keyboardEventHandler;
     MouseEventHandler mouseEventHandler;
@@ -175,8 +176,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 
     interrupts.activate();
 
-    Task task_main(&gdt, mainTask);
-    Task task_input(&gdt, inputTask);
+    Task task_main(mainTask);
+    Task task_input(inputTask);
     taskMgr.appendTask(&task_main);
     taskMgr.appendTask(&task_input);
 
@@ -215,7 +216,13 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 //    for (int i(0); i != 512; ++i)
 //        com1.write(data[i]);
 
+
+    asm ("movb $0x13, %%al \n" \
+         "movb $0x00, %%ah \n" \
+         "int $0x10" : : );
+
     printf("Start #");
 
-    while (1);
+    while (true)
+        asm ("hlt");
 }

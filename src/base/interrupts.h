@@ -37,7 +37,7 @@ class InterruptManager
     friend class InterruptHandler;
 
 public:
-    InterruptManager(GlobalDescriptorTable *gdt, TaskManager *task_manager);
+    InterruptManager(TaskManager *task_manager);
     virtual ~InterruptManager();
 
     void activate();
