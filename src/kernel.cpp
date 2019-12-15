@@ -14,6 +14,7 @@
 #include "std/stdlib.h"
 #include "std/unistd.h"
 #include "multitasking.h"
+#include "hard-ware/systimer.h"
 #include "hard-ware/comport.h"
 
 extern "C" void __attribute__((stdcall)) putc(char c)
@@ -96,7 +97,7 @@ void mainTask()
         unsigned int a = abs(rand() % 10);
         int *p = new int[a];
 
-        //printf("mainTask alloc %d, Pointer Address: %x\n", a, p);
+//        printf("mainTask alloc %d, Pointer Address: %x\n", a, p);
 
         delete[] p;
 
@@ -111,7 +112,7 @@ void inputTask()
         unsigned int a = abs(rand() % 10);
         int *p = new int[a];
 
-        //printf("inputTask alloc %d, Pointer Address: %x\n", a, p);
+//        printf("inputTask alloc %d, Pointer Address: %x\n", a, p);
 
         delete[] p;
 
@@ -159,6 +160,9 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     //GlobalDescriptorTable gdt;
     TaskManager taskMgr;
     InterruptManager interrupts(&taskMgr);
+
+    // init timer
+    init_timer(200);
 
     KeyboardEventHandler keyboardEventHandler;
     MouseEventHandler mouseEventHandler;

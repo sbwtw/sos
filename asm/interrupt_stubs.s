@@ -18,6 +18,7 @@ _ZN16InterruptManager16handleException\number\()Ev:
 handleInterruptRequest\number\():
     movb $\number + IRQ_BASE, (interrupt_number)
 
+    # error code
     pushl $0
 
     jmp int_bottom
@@ -64,7 +65,7 @@ int_bottom:
     popl %ebp
     # 恢复完成
 
-    # 平衡栈
+    # 平衡栈, error_code
     add $4, %esp
 
 ignoreInterruptRequest:
