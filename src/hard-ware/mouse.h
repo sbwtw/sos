@@ -26,7 +26,7 @@ class MouseDriver : public InterruptHandler, public Driver
 public:
     MouseDriver(InterruptManager *interrupt_manager, MouseEventHandler *mouse_handler);
 
-    uint32_t handleInterrupt(uint32_t esp) override;
+    CpuRegisters * handleInterrupt(CpuRegisters *state) override;
 
     void activate() override;
 

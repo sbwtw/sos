@@ -3,20 +3,36 @@
 #include "std/stdio.h"
 #include "multitasking.h"
 
+#define TIMER_INTERRUPT 0x20
+
+/**
+ *  TypeAttr:
+ *
+ *  +---+---+---+---+---+---+---+---+---+
+ *  | P |  DPL  | S |     GateType      |
+ *  +---+---+---+---+---+---+---+---+---+
+ * */
+
+/**
+ *  BitFields mean: https://wiki.osdev.org/Interrupt_Descriptor_Table
+ * */
+
+// IA-32
 struct GateDescriptor
 {
-    uint16_t handlerAddressLowBits;
-    uint16_t gdt_codeSegmentSelector;
-    uint8_t _reserved;
-    uint8_t access;
-    uint16_t handlerAddressHighBits;
+    uint16_t handlerAddressLowBits;     // offset bits [0, 15]
+    uint16_t gdt_codeSegmentSelector;   // a code segment selector in GDT or LDT
+    uint8_t _reserved;                  // unused, set to 0
+    uint8_t type_attr;                  // type and attributes
+    uint16_t handlerAddressHighBits;    // offset bits [16, 31]
 } __attribute__((packed));
+
 
 // idt 描述
 struct InterruptDescriptorTablePointer
 {
-    uint16_t size;
-    uint32_t base;
+    uint16_t size;      // length
+    uint32_t base;      // base address
 } __attribute__((packed));
 
 static InterruptManager *ActiveInterruptManager = nullptr;
@@ -28,12 +44,12 @@ extern "C" void handleInterruptRequest0x01();
 extern "C" void handleInterruptRequest0x0c();
 
 // 用于在 asm/interrupt_stubs.s 接收中断，将中断转回 C++ 中处理
-extern "C" uint32_t handleInterrupt(uint8_t interrupt_number, uint32_t esp)
+extern "C" void * __attribute__((cdecl)) handleInterrupt(uint8_t interrupt_number, CpuRegisters *state)
 {
     if (ActiveInterruptManager != nullptr)
-        return ActiveInterruptManager->doHandleInterrupt(interrupt_number, esp);
+        return ActiveInterruptManager->doHandleInterrupt(interrupt_number, state);
 
-    return esp;
+    return state;
 }
 
 // 在 asm/interrupt_stubs.s 中实现，所有中断的默认处理例程（什么都不做，忽略中断）
@@ -51,7 +67,7 @@ void InterruptManager::setInterruptDescriptorTableEntry(
     InterruptDescriptorTable[interrupt_number].handlerAddressLowBits = ((uint32_t)handler) & 0xffff;
     InterruptDescriptorTable[interrupt_number].handlerAddressHighBits = (((uint32_t)handler) >> 16) & 0xffff;
     InterruptDescriptorTable[interrupt_number].gdt_codeSegmentSelector = codeSegmentSelectorOffset;
-    InterruptDescriptorTable[interrupt_number].access = IDT_DESC_PRESENT | descriptorType | ((descriptorPrivilegeLevel & 3) << 5);
+    InterruptDescriptorTable[interrupt_number].type_attr = IDT_DESC_PRESENT | descriptorType | ((descriptorPrivilegeLevel & 3) << 5);
     InterruptDescriptorTable[interrupt_number]._reserved = 0;
 }
 
@@ -122,7 +138,7 @@ void InterruptManager::deactivate()
 }
 
 // 调用中断处理子程序
-uint32_t InterruptManager::doHandleInterrupt(uint8_t interrupt_number, uint32_t esp)
+CpuRegisters * InterruptManager::doHandleInterrupt(uint8_t interrupt_number, CpuRegisters *state)
 {
     //if (interrupt_number != 0x20)
         //printf("Handle Interrupt %x\n", interrupt_number);
@@ -130,18 +146,18 @@ uint32_t InterruptManager::doHandleInterrupt(uint8_t interrupt_number, uint32_t 
     // 如果设置了处理程序，则转向对应处理程序
     if (interruptHandlers[interrupt_number] != nullptr)
     {
-        esp = interruptHandlers[interrupt_number]->handleInterrupt(esp);
+        state = interruptHandlers[interrupt_number]->handleInterrupt(state);
     }
-    else if (interrupt_number != 0x20)
+    else if (interrupt_number != TIMER_INTERRUPT)
     {
         // 未处理的中断
         printf("UNHANDLED INTERRUPT: %d", interrupt_number);
     }
 
     // 定时器中断
-    if (interrupt_number == 0x20)
+    if (interrupt_number == TIMER_INTERRUPT)
     {
-        esp = (uint32_t)taskManager->schedule((CPUState *)esp);
+        state = taskManager->schedule(state);
     }
 
     if (0x20 <= interrupt_number && interrupt_number < 0x30)
@@ -152,7 +168,7 @@ uint32_t InterruptManager::doHandleInterrupt(uint8_t interrupt_number, uint32_t 
             picSlaveCommand.write(0x20);
     }
 
-    return esp;
+    return state;
 }
 
 InterruptHandler::InterruptHandler(uint8_t interrupt_number, InterruptManager *interrupt_manager)
@@ -168,7 +184,7 @@ InterruptHandler::~InterruptHandler()
         interruptManager->interruptHandlers[interruptNumber] = nullptr;
 }
 
-uint32_t InterruptHandler::handleInterrupt(uint32_t esp)
+CpuRegisters * InterruptHandler::handleInterrupt(CpuRegisters *state)
 {
-    return esp;
+    return state;
 }

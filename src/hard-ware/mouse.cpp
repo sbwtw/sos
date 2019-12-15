@@ -35,11 +35,11 @@ MouseDriver::MouseDriver(InterruptManager *interrupt_manager, MouseEventHandler 
 {
 }
 
-uint32_t MouseDriver::handleInterrupt(uint32_t esp)
+CpuRegisters * MouseDriver::handleInterrupt(CpuRegisters *state)
 {
     uint8_t status = commandPort.read();
     if (!(status & 0x20) || !mouseEventHandler)
-        return esp;
+        return state;
 
     buffer[offset] = dataPort.read();
     offset = (offset + 1) % 3;
@@ -51,7 +51,7 @@ uint32_t MouseDriver::handleInterrupt(uint32_t esp)
         sm->moveCareLocation(buffer[1], -buffer[2]);
     }
 
-    return esp;
+    return state;
 }
 
 void MouseDriver::activate()

@@ -6,8 +6,9 @@
 
 class GlobalDescriptorTable;
 
-struct CPUState
+struct CpuRegisters
 {
+    uint32_t ds;
     uint32_t eax;
     uint32_t ebx;
     uint32_t ecx;
@@ -17,13 +18,10 @@ struct CPUState
     uint32_t edi;
     uint32_t ebp;
 
-    // uint32_t gs;
-    // uint32_t fs;
-    // uint32_t es;
-    // uint32_t ds;
-
+    // error code, pushed by CPU
     uint32_t errno;
 
+    // pushed by CPU
     uint32_t eip;
     uint32_t cs;
     uint32_t eflags;
@@ -41,7 +39,7 @@ public:
 
 private:
     uint8_t stack[4096]; // 4 KiB
-    CPUState *cpuState;
+    CpuRegisters *cpuState;
 };
 
 class TaskManager
@@ -51,7 +49,7 @@ public:
     ~TaskManager();
 
     bool appendTask(Task *task);
-    CPUState *schedule(CPUState *cpustate);
+    CpuRegisters *schedule(CpuRegisters *cpustate);
 
 private:
     Task *tasks[256];

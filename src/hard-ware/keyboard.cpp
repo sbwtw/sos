@@ -26,19 +26,19 @@ KeyboardDriver::KeyboardDriver(InterruptManager *interrupt_manager, KeyboardEven
 {
 }
 
-uint32_t KeyboardDriver::handleInterrupt(uint32_t esp)
+CpuRegisters * KeyboardDriver::handleInterrupt(CpuRegisters *state)
 {
     uint8_t key = dataPort.read();
 
     if (keyEventHandler == nullptr)
-        return esp;
+        return state;
 
     if (key & 0x80)
         keyEventHandler->onKeyReleased(key);
     else
         keyEventHandler->onKeyPressed(key);
 
-    return esp;
+    return state;
 }
 
 void KeyboardDriver::activate()

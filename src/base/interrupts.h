@@ -14,13 +14,14 @@
 #include "port.h"
 #include "gdt.h"
 
+struct CpuRegisters;
 class InterruptManager;
 class TaskManager;
 
 class InterruptHandler
 {
 public:
-    virtual uint32_t handleInterrupt(uint32_t esp);
+    virtual CpuRegisters * handleInterrupt(CpuRegisters *state);
 
 protected:
     InterruptHandler(uint8_t interrupt_number, InterruptManager *interrupt_manager);
@@ -43,7 +44,7 @@ public:
     void activate();
     void deactivate();
 
-    uint32_t doHandleInterrupt(uint8_t interrupt_number, uint32_t esp);
+    CpuRegisters * doHandleInterrupt(uint8_t interrupt_number, CpuRegisters *state);
 
 protected:
     static void setInterruptDescriptorTableEntry(

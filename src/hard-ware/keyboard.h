@@ -21,7 +21,7 @@ class KeyboardDriver : public InterruptHandler, public Driver
 public:
     KeyboardDriver(InterruptManager *interrupt_manager, KeyboardEventHandler *handler);
 
-    uint32_t handleInterrupt(uint32_t esp) override;
+    CpuRegisters * handleInterrupt(CpuRegisters *state) override;
 
     void activate() override;
 

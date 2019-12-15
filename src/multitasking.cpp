@@ -4,7 +4,7 @@
 
 Task::Task(void entrypoint())
 {
-    cpuState = (CPUState *)(stack + 4096 - sizeof(CPUState));
+    cpuState = (CpuRegisters *)(stack + 4096 - sizeof(CpuRegisters));
 
     cpuState->eax = 0;
     cpuState->ebx = 0;
@@ -15,18 +15,8 @@ Task::Task(void entrypoint())
     cpuState->edi = 0;
     cpuState->ebp = 0;
 
-    // cpuState->gs = 0;
-    // cpuState->fs = 0;
-    // cpuState->es = 0;
-    // cpuState->ds = 0;
-
-    // cpuState->errno = 0;
-
-    // cpuState->esp = 0;
     cpuState->eip = (uint32_t)entrypoint;
-    //cpuState->cs = gdt->codeSegmentSelector();
     cpuState->cs = get_code_segment();
-    // cpuState->ss = 0;
     cpuState->eflags = 0x202;
 }
 
@@ -51,7 +41,7 @@ bool TaskManager::appendTask(Task *task)
     return true;
 }
 
-CPUState *TaskManager::schedule(CPUState *cpustate)
+CpuRegisters *TaskManager::schedule(CpuRegisters *cpustate)
 {
     if (taskCount <= 0)
         return cpustate;

@@ -28,26 +28,31 @@ HandleInterruptRequest 0x01 # keyboard
 HandleInterruptRequest 0x0c # mouse
 
 int_bottom:
-    #pusha
-    #pushl %ds
-    #pushl %es
-    #pushl %fs
-    #pushl %gs
-
-    pushl %ebp
+    # 此处会有隐式的中断数据，由 cpu 压栈，在 multitasking.h 中定义
+    # 构造 CpuRegisters 结构，在 multitasking.h 中定义，和中断数据一起处理 
+    pushl %ebp   
     pushl %edi
     pushl %esi
-
+    
     pushl %edx
     pushl %ecx
     pushl %ebx
     pushl %eax
 
-    pushl %esp
-    push (interrupt_number)
+    # 保存 ds
+    mov %ds, %ax
+    pushl %eax
+    # 构造完成
+
+    # handleInterrupt 的参数
+    pushl %esp                  # CpuRegisters 结构
+    push (interrupt_number)     # 中断号
     call handleInterrupt
-    # addl $5, %esp
-    movl %eax, %esp # switch stack
+
+    movl %eax, %esp # 处理来自中断的切换请求
+
+    # 对应上面的寄存器恢复
+    popl %eax
 
     popl %eax
     popl %ebx
@@ -57,13 +62,9 @@ int_bottom:
     popl %esi
     popl %edi
     popl %ebp
+    # 恢复完成
 
-    #popl %gs
-    #popl %fs
-    #popl %es
-    #popl %ds
-    #popa
-
+    # 平衡栈
     add $4, %esp
 
 ignoreInterruptRequest:
