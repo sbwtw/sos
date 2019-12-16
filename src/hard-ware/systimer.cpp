@@ -26,15 +26,24 @@
  *                  1 1 0 = Mode 2 (rate generator, same as 010b)
  *                  1 1 1 = Mode 3 (square wave generator, same as 011b)
  *  0           BCD/Binary mode: 0 = 16-bit binary, 1 = four-digit BCD
+ *
+ *
+ * Channel 0:
+ *  晶振由 BIOS 初始化为 65535 或 65536(0)，代表输出 18.2065Hz(54.9254ms)
+ *
+ * Channel 1:
+ *  可能不存在
+ *
+ * Channel 2:
+ *  PC Speaker: https://wiki.osdev.org/PC_Speaker
  * */
 
 void init_timer(uint32_t frequency) {
     uint32_t divisor = 11931800 / frequency;
 
     // D7 D6 D5 D4 D3 D2 D1 D0
-    // 0  0  1  1  0  1  1  0
-    // 即 36 H
-    // 设置 8253/8254 芯片工作在模式 3 下
+    // 0  0  1  1  0  1  1  0   = 36H
+    // 设置通道 0 工作在模式 3 下，产生方波
     outb(0x43, 0x36);
 
     // 拆分低字节和高字节
