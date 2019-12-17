@@ -26,10 +26,9 @@ target_include_directories(${BIN_NAME} PUBLIC include src)
 
 # create kernel image
 add_custom_command(TARGET ${BIN_NAME} POST_BUILD
-        COMMAND objcopy -O elf32-i386 ${BIN_NAME} ${IMAGE_NAME}
         COMMAND mkdir -p iso/boot/grub
-        COMMAND cp ${IMAGE_NAME} iso/boot
-        )
+        COMMAND objcopy -O elf32-i386 ${BIN_NAME} iso/boot/${IMAGE_NAME}
+        MAIN_DEPENDENCY ${BIN_NAME})
 
 # create bootable iso image
 IF (WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "CYGWIN")
@@ -37,14 +36,11 @@ IF (WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "CYGWIN")
     add_custom_command(TARGET ${BIN_NAME} POST_BUILD
             COMMAND cp ../boot/grub/stage2_eltorito iso/boot/grub
             COMMAND mkisofs -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4 -boot-info-table -o ${ISO_NAME} iso
-            )
+            MAIN_DEPENDENCY ${BIN_NAME})
 ELSE ()
     configure_file(boot/grub/grub.cfg.in iso/boot/grub/grub.cfg @ONLY)
     add_custom_command(TARGET ${BIN_NAME} POST_BUILD
             COMMAND grub-mkrescue --output=${ISO_NAME} iso
-            )
+            MAIN_DEPENDENCY ${BIN_NAME})
 ENDIF()
-
-# clear
-add_custom_command(TARGET ${BIN_NAME} POST_BUILD COMMAND rm -rf iso ${IMAGE_NAME})
 
