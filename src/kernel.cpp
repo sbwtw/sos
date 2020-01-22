@@ -16,6 +16,10 @@
 #include "multitasking.h"
 #include "hard-ware/systimer.h"
 #include "hard-ware/comport.h"
+#include "utils/multiboot.h"
+
+extern uint8_t kernel_start[];
+extern uint8_t kernel_end[];
 
 extern "C" void __attribute__((stdcall)) putc(char c)
 {
@@ -138,7 +142,20 @@ extern "C" void callConstructors()
     }
 }
 
-extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
+void show_memory_map(multiboot_uint32_t mmap_addr, multiboot_uint32_t mmap_length)
+{
+    printf("Memory map:\n");
+
+    for (auto mmap = (multiboot_mmap_entry *)mmap_addr; (multiboot_uint32_t)mmap < mmap_addr + mmap_length; mmap++)
+    {
+        printf("base = %x, length = %x, type = %x\n",
+                (uint32_t)mmap->addr,
+                (uint32_t)mmap->len,
+                (uint32_t)mmap->type);
+    }
+}
+
+extern "C" void kernelMain(multiboot_info *multiboot_structure, uint32_t _magic_number)
 {
     uint32_t *mem_upper = (uint32_t *)((size_t)multiboot_structure + 8);
     size_t heap = 20 * 1024 * 1024;
@@ -147,14 +164,18 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
     ScreenManager::instance()->clean();
 
     printf("sbw's Operating System\n");
+    show_memory_map(multiboot_structure->mmap_addr, multiboot_structure->mmap_length);
+
+    printf("AVAILABLE MEMORY RANGE: %x\n", *mem_upper * 1024);
+    printf("AVAILABLE MEMORY START: %x\n", heap);
+    printf("HEAP: %x - %x\n", heap, (*mem_upper) * 1024 - heap - 10 * 1024);
+    printf("kernel memory: %x ~ %x, total %dKB\n", kernel_start, kernel_end, (kernel_end - kernel_start + 1023) / 1024);
+
     printf("number: %d - %d = %d\n", 16, 2, 16 - 2);
     printf("hex: %x\n", 0x0123abc);
     printf("char: %c\n", 'a');
     printf("string: %s\n", "I'm string with zero terminated");
 
-    printf("AVAILABLE MEMORY RANGE: %x\n", *mem_upper * 1024);
-    printf("AVAILABLE MEMORY START: %x\n", heap);
-    printf("HEAP: %x - %x\n", heap, (*mem_upper) * 1024 - heap - 10 * 1024);
 
     gdt_init();
     //GlobalDescriptorTable gdt;
@@ -220,10 +241,6 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magic_number)
 //    for (int i(0); i != 512; ++i)
 //        com1.write(data[i]);
 
-
-    asm ("movb $0x13, %%al \n" \
-         "movb $0x00, %%ah \n" \
-         "int $0x10" : : );
 
     printf("Start #");
 

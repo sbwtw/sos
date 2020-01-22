@@ -5,6 +5,8 @@ SECTIONS
 {
     . = 0x0100000;
 
+    PROVIDE( kernel_start = . );
+
     .text :
     {
         *(.multiboot)
@@ -33,4 +35,6 @@ SECTIONS
         *(.fini_array*)
         *(.comment)
     }
+
+    PROVIDE( kernel_end = . );
 }
