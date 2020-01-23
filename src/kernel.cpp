@@ -155,27 +155,38 @@ void show_memory_map(multiboot_uint32_t mmap_addr, multiboot_uint32_t mmap_lengt
     }
 }
 
+void get_available_memory_range(multiboot_uint32_t mmap_addr, multiboot_uint32_t mmap_length, uint32_t &low_addr, uint32_t &high_addr)
+{
+    for (auto mmap = (multiboot_mmap_entry *)mmap_addr; (multiboot_uint32_t)mmap < mmap_addr + mmap_length; mmap++)
+    {
+        if (mmap->type != 0x1 || mmap->addr != 0x100000)
+            continue;
+
+        low_addr = mmap->addr;
+        high_addr = mmap->addr + mmap->len;
+
+        return;
+    }
+}
+
 extern "C" void kernelMain(multiboot_info *multiboot_structure, uint32_t _magic_number)
 {
-    uint32_t *mem_upper = (uint32_t *)((size_t)multiboot_structure + 8);
-    size_t heap = 20 * 1024 * 1024;
-    FirstFitAllocator memMgr(heap, (*mem_upper) * 1024 - heap - 10 * 1024);
+//    uint32_t *mem_upper = (uint32_t *)((size_t)multiboot_structure + 8);
+//    size_t heap = 20 * 1024 * 1024;
+//    FirstFitAllocator memMgr(heap, (*mem_upper) * 1024 - heap - 10 * 1024);
+
+    uint32_t mem_low, mem_high;
+    get_available_memory_range(multiboot_structure->mmap_addr, multiboot_structure->mmap_length, mem_low, mem_high);
+
+    FirstFitAllocator _memMgr(mem_low + (kernel_end - kernel_start), mem_high);
 
     ScreenManager::instance()->clean();
 
     printf("sbw's Operating System\n");
     show_memory_map(multiboot_structure->mmap_addr, multiboot_structure->mmap_length);
 
-    printf("AVAILABLE MEMORY RANGE: %x\n", *mem_upper * 1024);
-    printf("AVAILABLE MEMORY START: %x\n", heap);
-    printf("HEAP: %x - %x\n", heap, (*mem_upper) * 1024 - heap - 10 * 1024);
+    printf("AVAILABLE MEMORY RANGE: %x~%x\n", mem_low + (kernel_end - kernel_start), mem_high);
     printf("kernel memory: %x ~ %x, total %dKB\n", kernel_start, kernel_end, (kernel_end - kernel_start + 1023) / 1024);
-
-    printf("number: %d - %d = %d\n", 16, 2, 16 - 2);
-    printf("hex: %x\n", 0x0123abc);
-    printf("char: %c\n", 'a');
-    printf("string: %s\n", "I'm string with zero terminated");
-
 
     gdt_init();
     //GlobalDescriptorTable gdt;
