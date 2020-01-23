@@ -71,24 +71,24 @@ extern "C" void __attribute__((stdcall)) putd(int num)
     }
 }
 
-void put_simple_hex(int num)
+void put_simple_hex(uint32_t num)
 {
     const char *table = "0123456789ABCDEF";
 
-    const int d = num / 16;
-    const int r = num % 16;
+    const uint32_t d = num >> 4;
+    const uint32_t r = num & 0xf;
 
     if (d)
         put_simple_hex(d);
     putc(table[r]);
 }
 
-extern "C" void __attribute__((stdcall)) putx(int num)
+extern "C" void __attribute__((stdcall)) putx(uint32_t num)
 {
     putc('0');
     putc('x');
 
-    if (!num)
+    if (num == 0)
         return putc('0');
 
     put_simple_hex(num);
