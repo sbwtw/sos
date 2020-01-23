@@ -27,6 +27,7 @@ target_include_directories(${BIN_NAME} PUBLIC include src)
 # create kernel image
 add_custom_command(TARGET ${BIN_NAME} POST_BUILD
         COMMAND mkdir -p iso/boot/grub
+        COMMAND objcopy --only-keep-debug ${BIN_NAME} ${BIN_NAME}.dbg
         COMMAND objcopy -O elf32-i386 ${BIN_NAME} iso/boot/${IMAGE_NAME}
         MAIN_DEPENDENCY ${BIN_NAME})
 
